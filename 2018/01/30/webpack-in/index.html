@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="##为什么使用webpack如今web应用的功能越来越丰富，在这些功能的实现的背后，拥有着复杂的javascript代码和依赖包。开发者为了简化开发的复杂度，前端开发者社区内出现了各种实践方法。  模块化，让复杂的程序功能可以细分到每一个文件。 扩展语言，使我们能够实现目前版本的JavaScript不能直接使用的特性，并且之后还能转换为JavaScript文件使浏览器可以识别。 css的预处理le">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webpack入门学习笔记">
+<meta property="og:url" content="http://yoursite.com/2018/01/30/webpack-in/index.html">
+<meta property="og:site_name" content="杨溜溜的个人博客">
+<meta property="og:description" content="##为什么使用webpack如今web应用的功能越来越丰富，在这些功能的实现的背后，拥有着复杂的javascript代码和依赖包。开发者为了简化开发的复杂度，前端开发者社区内出现了各种实践方法。  模块化，让复杂的程序功能可以细分到每一个文件。 扩展语言，使我们能够实现目前版本的JavaScript不能直接使用的特性，并且之后还能转换为JavaScript文件使浏览器可以识别。 css的预处理le">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-30T08:08:59.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="webpack入门学习笔记">
+<meta name="twitter:description" content="##为什么使用webpack如今web应用的功能越来越丰富，在这些功能的实现的背后，拥有着复杂的javascript代码和依赖包。开发者为了简化开发的复杂度，前端开发者社区内出现了各种实践方法。  模块化，让复杂的程序功能可以细分到每一个文件。 扩展语言，使我们能够实现目前版本的JavaScript不能直接使用的特性，并且之后还能转换为JavaScript文件使浏览器可以识别。 css的预处理le">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/30/webpack-in/"/>
+
+
+
+
+
+  <title>webpack入门学习笔记 | 杨溜溜的个人博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">杨溜溜的个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/30/webpack-in/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="杨溜溜的个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">webpack入门学习笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-30T16:02:48+08:00">
+                2018-01-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>##为什么使用webpack<br>如今web应用的功能越来越丰富，在这些功能的实现的背后，拥有着复杂的javascript代码和依赖包。开发者为了简化开发的复杂度，前端开发者社区内出现了各种实践方法。</p>
+<ol>
+<li>模块化，让复杂的程序功能可以细分到每一个文件。</li>
+<li>扩展语言，使我们能够实现目前版本的JavaScript不能直接使用的特性，并且之后还能转换为JavaScript文件使浏览器可以识别。</li>
+<li>css的预处理less、sass。</li>
+<li>…<br>这些改进确实大大的提高了我们的开发效率，但是利用它们开发的文件往往需要进行额外的处理才能让浏览器识别,而手动处理又是非常繁琐的，这就为webpack类的工具的出现提供了需求。<br>##定义<br>webpack可以看成是一个前端代码的的模块打包器，它通过对项目结构以及依赖的分析，将一些浏览器不能解析执行的扩展语言（TypeScript、sass、less等）进行转换和分模块打包成可以浏览器解析引擎可以直接执行的javasript和css代码。<br>##特性<br>###代码切分<br>对于一个大项目来说，所有代码都打包在一个文件之内会大大增加应用的首屏加载时间，降低了用户体验。为了解决这个问题，代码切分会根据依赖关系树，将代码切分为同步和异步的块，把首屏不需要加载代码块切分到不同的文件内，按需加载需要的模块。<br>###加载器<br>webpack除了加载javascript资源文件外，还可以通过特定的加载器把其他资源文件转化处理成javascript需要的内容。任何资源都可以通过加载器成为webpack加载的模块。<br>###插件<br>webapck拥有丰富的插件系统，开发者可以根据自己的需求，为webpack打包配置添加不同的插件，达到不同的打包结果。</li>
+</ol>
+<p>##使用webpack<br>全局安装webpack<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install wabpack -g</span><br></pre></td></tr></table></figure></p>
+<p>添加入口文件index.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.write(<span class="string">'我是入口文件'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>添加html模板<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"bundle.js"</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span> <span class="comment">&lt;!-- bundle.js为打包文件名 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>然后执行命令打包<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ webpack ./index.js ./bundle.js</span><br></pre></td></tr></table></figure></p>
+<p>成功后显示结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Hash: 1ce33659f982ca43bf98</span><br><span class="line">Version: webpack 3.8.1</span><br><span class="line">Time: 73ms</span><br><span class="line">    Asset    Size  Chunks             Chunk Names</span><br><span class="line">bundle.js  2.5 kB       0  [emitted]  main</span><br><span class="line">   [0] ./index.js 26 bytes &#123;0&#125; [built]</span><br></pre></td></tr></table></figure></p>
+<p>在浏览器中打开模板文件可以看到index.js的执行结果。</p>
+<p>另外，可以通过新建配置文件webpack.config.js来进行打包<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    entry: <span class="string">'.index.js'</span>,</span><br><span class="line">    output: &#123;</span><br><span class="line">        path: __dirname,</span><br><span class="line">        filename: <span class="string">"bundle.js"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>执行命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ webpack</span><br></pre></td></tr></table></figure></p>
+<p>效果与前者一样。</p>
+<p>##配置<br>通过配置文件可对打包结果进行定义。默认打包配置文件名为webpack.config.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    <span class="comment">// 入口entry string | object | array</span></span><br><span class="line">    entry: &#123;</span><br><span class="line">        a: <span class="string">"./app/entry-a"</span>,</span><br><span class="line">        b: [<span class="string">"./app/entry-b1"</span>, <span class="string">"./app/entry-b2"</span>]</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// 这里应用程序开始执行</span></span><br><span class="line">    <span class="comment">// webpack 开始打包</span></span><br><span class="line">    output: &#123;</span><br><span class="line">        <span class="comment">// webpack 如何输出结果的相关选项</span></span><br><span class="line">        path: path.resolve(__dirname, <span class="string">"dist"</span>), <span class="comment">// string 所有输出文件的目标路径，必须是绝对路径（使用 Node.js 的 path 模块）</span></span><br><span class="line">        filename: <span class="string">"bundle.[name].[chunkhash].js"</span>, <span class="comment">// string [name]用于多个入口文件，[chunkhash]为当前chunk的chunkhash，用于解决缓存问题</span></span><br><span class="line">        publicPath: <span class="string">'/'</span>, <span class="comment">// 输出解析文件的目录，也可以理解为加载chunk文件的路径</span></span><br><span class="line">        library: <span class="string">"MyLibrary"</span>, <span class="comment">// string 导出库(exported library)的名称 webpack的另外一个作用，还可以用于打包JavaScript library。</span></span><br><span class="line">        libraryTarget: <span class="string">"umd"</span>, <span class="comment">// 导出库(exported library)的类型 'umd' 通用模块定义</span></span><br><span class="line">        pathinfo: <span class="literal">true</span>, <span class="comment">// boolean</span></span><br><span class="line">        <span class="comment">// 在生成代码时，引入相关的模块、导出、请求等有帮助的路径信息。</span></span><br><span class="line">        chunkFilename: <span class="string">"[id].js"</span>,</span><br><span class="line">        chunkFilename: <span class="string">"[chunkhash].js"</span>, <span class="comment">// 长效缓存(/guides/caching)</span></span><br><span class="line">        <span class="comment">// 「附加分块(additional chunk)」的文件名模板</span></span><br><span class="line">        jsonpFunction: <span class="string">"myWebpackJsonp"</span>, <span class="comment">// string</span></span><br><span class="line">        <span class="comment">// 用于加载分块的 JSONP 函数名</span></span><br><span class="line">        sourceMapFilename: <span class="string">"[file].map"</span>, <span class="comment">// string</span></span><br><span class="line">        sourceMapFilename: <span class="string">"sourcemaps/[file].map"</span>, <span class="comment">// string</span></span><br><span class="line">        <span class="comment">// 「source map 位置」的文件名模板</span></span><br><span class="line">        devtoolModuleFilenameTemplate: <span class="string">"webpack:///[resource-path]"</span>, <span class="comment">// string</span></span><br><span class="line">        <span class="comment">// 「devtool 中模块」的文件名模板</span></span><br><span class="line">        devtoolFallbackModuleFilenameTemplate: <span class="string">"webpack:///[resource-path]?[hash]"</span>, <span class="comment">// string</span></span><br><span class="line">        <span class="comment">// 「devtool 中模块」的文件名模板（用于冲突）</span></span><br><span class="line">        umdNamedDefine: <span class="literal">true</span>, <span class="comment">// boolean</span></span><br><span class="line">        <span class="comment">// 在 UMD 库中使用命名的 AMD 模块</span></span><br><span class="line">        crossOriginLoading: <span class="string">"use-credentials"</span>, <span class="comment">// 枚举</span></span><br><span class="line">        crossOriginLoading: <span class="string">"anonymous"</span>,</span><br><span class="line">        crossOriginLoading: <span class="literal">false</span>,</span><br><span class="line">        <span class="comment">// 指定运行时如何发出跨域请求问题</span></span><br><span class="line">        devtoolLineToLine: &#123;</span><br><span class="line">          test: <span class="regexp">/\.jsx$/</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="comment">// 为这些模块使用 1:1 映射 SourceMaps（快速）</span></span><br><span class="line">        hotUpdateMainFilename: <span class="string">"[hash].hot-update.json"</span>, <span class="comment">// string</span></span><br><span class="line">        <span class="comment">// 「HMR 清单」的文件名模板</span></span><br><span class="line">        hotUpdateChunkFilename: <span class="string">"[id].[hash].hot-update.js"</span>, <span class="comment">// string</span></span><br><span class="line">        <span class="comment">// 「HMR 分块」的文件名模板</span></span><br><span class="line">        sourcePrefix: <span class="string">"\t"</span>, <span class="comment">// string</span></span><br><span class="line">        <span class="comment">// 包内前置式模块资源具有更好可读性</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="built_in">module</span>:&#123;</span><br><span class="line">        <span class="comment">// 关于模块配置</span></span><br><span class="line">        rules: [</span><br><span class="line">          <span class="comment">// 模块规则（配置 loader、解析器等选项）</span></span><br><span class="line">          &#123;</span><br><span class="line">            test: <span class="regexp">/\.jsx?$/</span>,</span><br><span class="line">            include: [</span><br><span class="line">              path.resolve(__dirname, <span class="string">"app"</span>)</span><br><span class="line">            ],</span><br><span class="line">            exclude: [</span><br><span class="line">              path.resolve(__dirname, <span class="string">"app/demo-files"</span>)</span><br><span class="line">            ],</span><br><span class="line">            <span class="comment">// 这里是匹配条件，每个选项都接收一个正则表达式或字符串</span></span><br><span class="line">            <span class="comment">// test 和 include 具有相同的作用，都是必须匹配选项</span></span><br><span class="line">            <span class="comment">// exclude 是必不匹配选项（优先于 test 和 include）</span></span><br><span class="line">            <span class="comment">// 最佳实践：</span></span><br><span class="line">            <span class="comment">// - 只在 test 和 文件名匹配 中使用正则表达式</span></span><br><span class="line">            <span class="comment">// - 在 include 和 exclude 中使用绝对路径数组</span></span><br><span class="line">            <span class="comment">// - 尽量避免 exclude，更倾向于使用 include</span></span><br><span class="line">            issuer: &#123; test, include, exclude &#125;,</span><br><span class="line">            <span class="comment">// issuer 条件（导入源）</span></span><br><span class="line">            enforce: <span class="string">"pre"</span>,</span><br><span class="line">            enforce: <span class="string">"post"</span>,</span><br><span class="line">            <span class="comment">// 标识应用这些规则，即使规则覆盖（高级选项）</span></span><br><span class="line">            loader: <span class="string">"babel-loader"</span>,</span><br><span class="line">            <span class="comment">// 应该应用的 loader，它相对上下文解析</span></span><br><span class="line">            <span class="comment">// 为了更清晰，`-loader` 后缀在 webpack 2 中不再是可选的</span></span><br><span class="line">            options: &#123;</span><br><span class="line">              presets: [<span class="string">"es2015"</span>]</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="comment">// loader 的可选项</span></span><br><span class="line">          &#125;,</span><br><span class="line">          &#123;</span><br><span class="line">            test: <span class="regexp">/\.html$/</span>,</span><br><span class="line">            test: <span class="string">"\.html$"</span></span><br><span class="line"></span><br><span class="line">            use: [</span><br><span class="line">              <span class="comment">// 应用多个 loader 和选项</span></span><br><span class="line">              <span class="string">"htmllint-loader"</span>,</span><br><span class="line">              &#123;</span><br><span class="line">                loader: <span class="string">"html-loader"</span>,</span><br><span class="line">                options: &#123;</span><br><span class="line">                  <span class="comment">/* ... */</span></span><br><span class="line">                &#125;</span><br><span class="line">              &#125;</span><br><span class="line">            ]</span><br><span class="line">          &#125;,</span><br><span class="line">          &#123; <span class="attr">oneOf</span>: [ <span class="comment">/* rules */</span> ] &#125;,</span><br><span class="line">          <span class="comment">// 只使用这些嵌套规则之一</span></span><br><span class="line">          &#123; <span class="attr">rules</span>: [ <span class="comment">/* rules */</span> ] &#125;,</span><br><span class="line">          <span class="comment">// 使用所有这些嵌套规则（合并可用条件）</span></span><br><span class="line">          &#123; <span class="attr">resource</span>: &#123; <span class="attr">and</span>: [ <span class="comment">/* 条件 */</span> ] &#125; &#125;,</span><br><span class="line">          <span class="comment">// 仅当所有条件都匹配时才匹配</span></span><br><span class="line">          &#123; <span class="attr">resource</span>: &#123; <span class="attr">or</span>: [ <span class="comment">/* 条件 */</span> ] &#125; &#125;,</span><br><span class="line">          &#123; <span class="attr">resource</span>: [ <span class="comment">/* 条件 */</span> ] &#125;,</span><br><span class="line">          <span class="comment">// 任意条件匹配时匹配（默认为数组）</span></span><br><span class="line">          &#123; <span class="attr">resource</span>: &#123; <span class="attr">not</span>: <span class="comment">/* 条件 */</span> &#125; &#125;</span><br><span class="line">          <span class="comment">// 条件不匹配时匹配</span></span><br><span class="line">        ],</span><br><span class="line">        noParse: [</span><br><span class="line">          /special-library\.js$/</span><br><span class="line">        ],</span><br><span class="line">        <span class="comment">// 不解析这里的模块</span></span><br><span class="line">    &#125;,</span><br><span class="line">    resolve: &#123;</span><br><span class="line">        <span class="comment">// 解析模块请求的选项</span></span><br><span class="line">        <span class="comment">// （不适用于对 loader 解析）</span></span><br><span class="line">        modules: [</span><br><span class="line">          <span class="string">"node_modules"</span>,</span><br><span class="line">          path.resolve(__dirname, <span class="string">"app"</span>)</span><br><span class="line">        ],</span><br><span class="line">        <span class="comment">// 用于查找模块的目录</span></span><br><span class="line">        extensions: [<span class="string">".js"</span>, <span class="string">".json"</span>, <span class="string">".jsx"</span>, <span class="string">".css"</span>],</span><br><span class="line">        <span class="comment">// 使用的扩展名</span></span><br><span class="line">        alias: &#123;</span><br><span class="line">          <span class="comment">// 模块别名列表</span></span><br><span class="line">          <span class="string">"module"</span>: <span class="string">"new-module"</span>,</span><br><span class="line">          <span class="comment">// 起别名："module" -&gt; "new-module" 和 "module/path/file" -&gt; "new-module/path/file"</span></span><br><span class="line">          <span class="string">"only-module$"</span>: <span class="string">"new-module"</span>,</span><br><span class="line">          <span class="comment">// 起别名 "only-module" -&gt; "new-module"，但不匹配 "only-module/path/file" -&gt; "new-module/path/file"</span></span><br><span class="line">          <span class="string">"module"</span>: path.resolve(__dirname, <span class="string">"app/third/module.js"</span>),</span><br><span class="line">          <span class="comment">// 起别名 "module" -&gt; "./app/third/module.js" 和 "module/file" 会导致错误</span></span><br><span class="line">          <span class="comment">// 模块别名相对于当前上下文导入</span></span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">    devtool: <span class="string">"source-map"</span>, <span class="comment">// enum</span></span><br><span class="line">    <span class="comment">// 通过在浏览器调试工具(browser devtools)中添加元信息(meta info)增强调试</span></span><br><span class="line">    <span class="comment">// 牺牲了构建速度的 `source-map' 是最详细的。</span></span><br><span class="line">    context: __dirname, <span class="comment">// string（绝对路径！）</span></span><br><span class="line">    <span class="comment">// webpack 的主目录</span></span><br><span class="line">    <span class="comment">// entry 和 module.rules.loader 选项</span></span><br><span class="line">    <span class="comment">// 相对于此目录解析</span></span><br><span class="line">    target: <span class="string">"web"</span>, <span class="comment">// 枚举</span></span><br><span class="line">    <span class="comment">// 包(bundle)应该运行的环境</span></span><br><span class="line">    <span class="comment">// 更改 块加载行为(chunk loading behavior) 和 可用模块(available module)</span></span><br><span class="line">    externals: &#123;</span><br><span class="line">        jquery: <span class="string">'window.$'</span> <span class="comment">// 遇到jquery模块时直接引用window.$</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// 不要遵循/打包这些模块，而是在运行时从环境中请求他们</span></span><br><span class="line"></span><br><span class="line">    plugins: [</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="comment">// 附加插件列表</span></span><br><span class="line"></span><br><span class="line">    cache: <span class="literal">false</span>, <span class="comment">// boolean</span></span><br><span class="line">    <span class="comment">// 禁用/启用缓存</span></span><br><span class="line">    watch: <span class="literal">true</span>, <span class="comment">// boolean</span></span><br><span class="line">    <span class="comment">// 启用观察</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>以上为webpack常用配置。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/30/d3-react/" rel="next" title="react和d3.js(v4)力导向图force结合使用">
+                <i class="fa fa-chevron-left"></i> react和d3.js(v4)力导向图force结合使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/30/react-router/" rel="prev" title="react-router v3学习整理">
+                react-router v3学习整理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
