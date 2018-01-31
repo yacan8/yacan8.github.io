@@ -1,5 +1,9 @@
 ---
 title: Java使用Nashorn，调用Promise实现服务端渲染
+tags:
+- java
+- nashorn
+- promise
 ---
 
 Nashorn JavaScript引擎是Java SE 8 的一部分，并且和其它独立的引擎例如 [Google V8](https://code.google.com/p/v8/)（用于Google Chrome和Node.js的引擎）互相竞争。Nashorn通过在JVM上，以原生方式运行动态的JavaScript代码来扩展Java的功能。

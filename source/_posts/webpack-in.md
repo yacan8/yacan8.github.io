@@ -1,5 +1,8 @@
 ---
 title: webpack入门学习笔记
+tags:
+- 前端构建
+- webpack
 ---
 
 ## 为什么使用webpack
@@ -69,7 +72,7 @@ module.exports = {
 $ webpack
 ```
 效果与前者一样。
-##配置
+## 配置
 通过配置文件可对打包结果进行定义。默认打包配置文件名为webpack.config.js
 ```javascript
 const path = require('path');

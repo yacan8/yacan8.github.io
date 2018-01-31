@@ -1,5 +1,8 @@
 ---
 title: react-router v3学习整理
+tags:
+- react
+- react-router
 ---
 
 ## 简介

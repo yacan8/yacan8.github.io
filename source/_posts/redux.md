@@ -1,5 +1,9 @@
 ---
 title: redux从零到入门笔记
+date: 2018-01-31 18:34:25
+tags:
+- react
+- redux
 ---
 
 ## 为什么需要redux
