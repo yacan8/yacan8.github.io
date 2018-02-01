@@ -94,12 +94,13 @@ index_with_subtitle: false
 menu:
   home: / || home
   #about: /about/ || user
-  #tags: /tags/ || tags
+  # tags: /tags/
   #categories: /categories/ || th
   archives: /archives/ || archive
   #schedule: /schedule/ || calendar
   #sitemap: /sitemap.xml || sitemap
   #commonweal: /404/ || heartbeat
+  # search: /search/
 
 # Enable/Disable menu icons.
 menu_icons:
@@ -111,10 +112,10 @@ menu_icons:
 # ---------------------------------------------------------------
 
 # Schemes
-scheme: Muse
-#scheme: Mist
-#scheme: Pisces
-#scheme: Gemini
+# scheme: Muse
+# scheme: Mist
+scheme: Pisces
+# scheme: Gemini
 
 
 # ---------------------------------------------------------------
@@ -142,7 +143,7 @@ social_icons:
   enable: true
   icons_only: false
   transition: false
-
+  GitHub: https://github.com/yacan8
 # Blog rolls
 links_icon: link
 links_title: Links
@@ -154,7 +155,7 @@ links_layout: block
 # Sidebar Avatar
 # in theme directory(source/images): /images/avatar.gif
 # in site  directory(source/uploads): /uploads/avatar.gif
-#avatar: /images/avatar.gif
+avatar: /images/icon.jpg
 
 # Table Of Contents in the Sidebar
 toc:
