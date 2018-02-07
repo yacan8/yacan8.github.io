@@ -6,7 +6,7 @@ tags:
 - JavaScript
 ---
 
-
+设计模式，即解决某个特定场景下对某种问题的解决方案。因此，当我们遇到合适的场景时，我们可能会条件反射一样自然而然想到符合这种场景的设计模式。
 ## 单例模式
 概念：
 保证一个类仅有一个实例，并提供一个访问它的全局访问点。实现的方法为先判断实例存在与否，如果存在则直接返回，如果不存在就创建了再返回，这就确保了一个类只有一个实例对象。
@@ -130,7 +130,8 @@ console.log(sale.getPrice()); //$50.4
 ```
 
 ## 策略模式
-概念：定义一系列的算法，把它们一个个封装起来，并且使它们可以相互替换。
+概念：
+定义一系列的算法，把它们一个个封装起来，并且使它们可以相互替换。
 
 意义：
 * 利用组合，委托等技术和思想，有效的避免很多if条件语句。
@@ -196,4 +197,59 @@ var validataFunc = function(){
     return false; // 阻止表单提交
   }
 };
+```
+
+## 观察者模式（发布/订阅模式）
+概念：
+定义对象间的一种一对多的依赖关系，当一个对象的状态发生改变时，所有依赖于它的对象都将得到通知。
+
+意义：
+* 支持简单的广播通信，自动通知所有已经订阅过的对象。
+* 页面载入后目标对象很容易与观察者存在一种动态关联，增加了灵活性。
+* 目标对象与观察者之间的抽象耦合关系能够单独扩展以及重用。
+
+应用场景：双向数据绑定
+
+```js
+class EventEmitter {
+    constructor() {
+        this._events = {
+        }
+    }
+    emit(type) {
+        var funL = this._events[type];
+        var args = Array.from(arguments).slice(1);
+        funL.forEach(function(e) {
+            e(...args);
+        })
+    }
+    addListener(type, func) {
+        this._events = this._events || {};
+        if (!this._events[type]) {
+            this._events[type] = [];
+        }
+        this._events[type].push(func);
+    }
+    removeListener(type,func){
+        this._events[type].splice(this._events[type].indexOf(func),1);
+    }
+    on(type, func){
+        this.addListener(type, func)
+    }
+}
+//  首先实例化 EventEmitter 然后添加监听事件以及触发事件。
+var emitter = new EventEmitter();
+emitter.addListener('test', function(a1, a2) {
+    console.log(a1+a2);
+});
+emitter.on('test', function(a1, a2) {
+    console.log(a2);
+});
+emitter.emit('test', "augument1", "argument2");
+emitter.emit('test', "augument3", "argument4");
+//console
+// augument1argument2
+// argument2
+// augument3argument4
+// argument4
 ```
