@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="前端,JavaScript,CSS," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="react生命周期深入实例化：  getDefaultProps(es5) getInitialState(es5) componentWillMount render componentDidMount  存在期：  componentWillReceiveProps（后期将废弃） shouldComponentUpdate componentWillUpdate render componen">
+<meta name="keywords" content="前端,JavaScript,CSS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端知识杂项（一）">
+<meta property="og:url" content="http://yoursite.com/2018/02/28/前端知识杂项(一)/index.html">
+<meta property="og:site_name" content="杨溜溜的博客">
+<meta property="og:description" content="react生命周期深入实例化：  getDefaultProps(es5) getInitialState(es5) componentWillMount render componentDidMount  存在期：  componentWillReceiveProps（后期将废弃） shouldComponentUpdate componentWillUpdate render componen">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-15T07:28:37.845Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前端知识杂项（一）">
+<meta name="twitter:description" content="react生命周期深入实例化：  getDefaultProps(es5) getInitialState(es5) componentWillMount render componentDidMount  存在期：  componentWillReceiveProps（后期将废弃） shouldComponentUpdate componentWillUpdate render componen">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/02/28/前端知识杂项(一)/"/>
+
+
+
+
+
+  <title>前端知识杂项（一） | 杨溜溜的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">杨溜溜的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">记录学习的技能和遇到的问题</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/28/前端知识杂项(一)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="杨溜溜">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/icon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="杨溜溜的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">前端知识杂项（一）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-28T17:11:00+08:00">
+                2018-02-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="react生命周期深入"><a href="#react生命周期深入" class="headerlink" title="react生命周期深入"></a>react生命周期深入</h3><p>实例化：</p>
+<ul>
+<li>getDefaultProps(es5)</li>
+<li>getInitialState(es5)</li>
+<li>componentWillMount</li>
+<li>render</li>
+<li>componentDidMount</li>
+</ul>
+<p>存在期：</p>
+<ul>
+<li>componentWillReceiveProps（后期将废弃）</li>
+<li>shouldComponentUpdate</li>
+<li>componentWillUpdate</li>
+<li>render</li>
+<li>componentDidUpdate</li>
+</ul>
+<p>销毁：</p>
+<ul>
+<li>componentWillUnmount</li>
+</ul>
+<h3 id="bind函数"><a href="#bind函数" class="headerlink" title="bind函数"></a>bind函数</h3><p>bind() 函数会创建一个新函数（称为绑定函数），新函数与被调函数（绑定函数的目标函数）具有相同的函数体（在 ECMAScript 5 规范中内置的call属性）。当新函数被调用时 this 值绑定到 bind() 的第一个参数，该参数不能被重写。绑定函数被调用时，bind() 也接受预设的参数提供给原函数。一个绑定函数也能使用new操作符创建对象：这种行为就像把原函数当成构造器。提供的 this 值被忽略，同时调用时的参数被提供给模拟函数。绑定上下文到第一个参数，第一个参数以后的参数为预设参数。如下<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bindTest</span>(<span class="params">arg, e</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;arg, e&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> t = bindTest.bind(<span class="literal">null</span>, <span class="number">1</span>);</span><br><span class="line">t(<span class="string">'test e'</span>) <span class="comment">// &#123;arg: 1, e: 'test e'&#125;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="装饰器decorator"><a href="#装饰器decorator" class="headerlink" title="装饰器decorator"></a>装饰器decorator</h3><p>js语法糖，使用@符号进行修饰，只能修饰类或者类的方法，返回一个新的类或者新的方法，不能修饰函数，因为存在变量提升。</p>
+<h3 id="xss和csrf"><a href="#xss和csrf" class="headerlink" title="xss和csrf"></a>xss和csrf</h3><ul>
+<li>xss：跨站脚本攻击，通过注入恶意脚本，达到攻击站点的目的，如SQL注入、JavaScript脚本注入，防范：过滤脚本。</li>
+<li>csrf：跨站请求伪造，一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法，相当于冒充用户。防范：令牌、使用正确的请求方式。</li>
+</ul>
+<h3 id="ajax原理"><a href="#ajax原理" class="headerlink" title="ajax原理"></a>ajax原理</h3><p>浏览器提供了XMLHttpRequest对象，在XMLHttpRequest对象被实例化并连接后，浏览器会新启动一个线程来监听实例状态变化，当XMLHttpRequest实例状态有变化（未初始化、初始化完成、发送数据、数据传输中、完成）且设置后回调函数，线程会将回调函数添加到事件队列当中，等待JS引擎空闲了执行。</p>
+<h3 id="box-sizing"><a href="#box-sizing" class="headerlink" title="box-sizing"></a>box-sizing</h3><ul>
+<li>盒子模型：CSS将每个元素当做一个盒子，每个盒子包括内容、内边距padding、边框border、外边距margin。</li>
+<li>content-box：width和height只包括内容宽高。</li>
+<li>border-box：width和height包括内容宽高、内边距、边框，增加内边距、边框不会影响总体尺寸。</li>
+<li>padding-box：width和height包括内容宽高、内边距，增加内边距不会影响总体尺寸。</li>
+</ul>
+<h3 id="rem与em区别"><a href="#rem与em区别" class="headerlink" title="rem与em区别"></a>rem与em区别</h3><p>都为相对单位，最终都将转化为px单位，rem转化的大小相对于全局的字体大小，em是根据父元素的字体大小进行转化。</p>
+<h3 id="函数式编程部分概念"><a href="#函数式编程部分概念" class="headerlink" title="函数式编程部分概念"></a>函数式编程部分概念</h3><ul>
+<li>纯函数：对于相同的输入，永远都有相同的输出，没有特殊情况，没有任何可观察的副作用，完全不依赖于外部变量。如slice为纯函数、splice为非春函数。</li>
+<li>函数的柯里化：传递给函数一部分参数来调用他，让它返回一个新的函数来处理剩下的参数。从某种意义上讲，柯里化是一种“预加载”函数的方法，通过传递较少的参数，得到一个已经记住这些参数的新函数，可以算是一种参数的缓存，是一种非常高效的函数编写方法。</li>
+</ul>
+<h3 id="header-http-only"><a href="#header-http-only" class="headerlink" title="header http-only"></a>header http-only</h3><p>如果设置了http-only，那么cookie将不能被js所操作，那么从某种意义上讲可以防止xss攻击。</p>
+<h3 id="http缓存机制"><a href="#http缓存机制" class="headerlink" title="http缓存机制"></a>http缓存机制</h3><ul>
+<li>强制缓存：第一次请求缓存，重复请求之后如果缓存未过期，直接使用缓存。</li>
+<li>对比缓存：第一次请求缓存且保存缓存标识与时间，重复请求向服务器发送缓存标识和最后缓存时间，服务端进行校验，如果失效则使用缓存。</li>
+<li>Exprires：服务器返回的到期时间（基本不使用了）。</li>
+<li>Cache-control：缓存模式，private为客户端可缓存、public为服务端和客户端都可以缓存、max-age:xxx缓存内容在XXX面后失效、no-cache为使用对比缓存、no-store不适用缓存。</li>
+<li>Etag：缓存标识，对比缓存时使用它来标识一个缓存。</li>
+<li>Last-Modified：最后修改时间，即上次缓存时间。</li>
+<li>对于强制缓存，服务器通知浏览器一个缓存时间，在缓存时间内，下次请求，直接用缓存，不在时间内，执行比较缓存策略。</li>
+<li>对于比较缓存，将缓存信息中的Etag和Last-Modified通过请求发送给服务器，由服务器校验，返回304状态码时，浏览器直接使用缓存。</li>
+</ul>
+<h3 id="JavaScript垃圾回收机制"><a href="#JavaScript垃圾回收机制" class="headerlink" title="JavaScript垃圾回收机制"></a>JavaScript垃圾回收机制</h3><ul>
+<li>标记清理：JavaScript中最常用的垃圾回收机制，当变量进入执行环境时候，比如一个变量被声明，垃圾回收器会将其标记为“进入环境”，当变量离开环境的时候（函数执行结束）将其标记为“离开环境”，然后在去掉环境中的变量以及被环境中变量引用的变量的标记（闭包）,最后还留有标记的变量，就是要被回收的变量，</li>
+<li>引用计数：跟踪记录每一个变量被使用的次数，当声明一个变量并将一个引用类型赋值给该变量的时候，引用次数加1，如果该变量变成另外一个，引用次数减1，当这个值的引用次数变为0的时候，说明没有变量在使用，这个值没法被访问了，因此可以将其占用的空间回收，这样垃圾回收器会在运行的时候清理掉引用次数为0的值占用的空间。该方式经常会出现内容泄露问题。如：<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">var</span> a = &#123;&#125;;</span><br><span class="line">  <span class="keyword">var</span> b = &#123;&#125;;</span><br><span class="line">  a.prop = b;</span><br><span class="line">  b.prop = a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>a、b最后的引用次数都为2，test()执行完毕后，a和b占用的空间不会被清理。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+          
+            <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
+          
+            <a href="/tags/CSS/" rel="tag"># CSS</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/26/promise原理/" rel="next" title="Promise实现原理">
+                <i class="fa fa-chevron-left"></i> Promise实现原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/06/前端知识杂项(二)/" rel="prev" title="前端知识杂项（二）">
+                前端知识杂项（二） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/icon.jpg"
+                alt="杨溜溜" />
+            
+              <p class="site-author-name" itemprop="name">杨溜溜</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#react生命周期深入"><span class="nav-number">1.</span> <span class="nav-text">react生命周期深入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bind函数"><span class="nav-number">2.</span> <span class="nav-text">bind函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#装饰器decorator"><span class="nav-number">3.</span> <span class="nav-text">装饰器decorator</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#xss和csrf"><span class="nav-number">4.</span> <span class="nav-text">xss和csrf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ajax原理"><span class="nav-number">5.</span> <span class="nav-text">ajax原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#box-sizing"><span class="nav-number">6.</span> <span class="nav-text">box-sizing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rem与em区别"><span class="nav-number">7.</span> <span class="nav-text">rem与em区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数式编程部分概念"><span class="nav-number">8.</span> <span class="nav-text">函数式编程部分概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#header-http-only"><span class="nav-number">9.</span> <span class="nav-text">header http-only</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#http缓存机制"><span class="nav-number">10.</span> <span class="nav-text">http缓存机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JavaScript垃圾回收机制"><span class="nav-number">11.</span> <span class="nav-text">JavaScript垃圾回收机制</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">杨溜溜</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

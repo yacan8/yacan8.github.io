@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="react,antd,前端," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="引言antd的Tooltip组件在react-componment/trigger的基础上进行封装，而组件Popover和Popconfirm是使用Tooltip组件的进行pop，在react-componment中，使用到组件tc-trigger的还有menu、select、dropdown、time-picker、calendar等，本文主要对tc-trigger源码进行解读。 结构项目结构如">
+<meta name="keywords" content="react,antd,前端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="antd源码解读（二）Tooltip组件解析">
+<meta property="og:url" content="http://yoursite.com/2018/05/01/antd源码解析(二)Tooltip组件解析/index.html">
+<meta property="og:site_name" content="杨溜溜的博客">
+<meta property="og:description" content="引言antd的Tooltip组件在react-componment/trigger的基础上进行封装，而组件Popover和Popconfirm是使用Tooltip组件的进行pop，在react-componment中，使用到组件tc-trigger的还有menu、select、dropdown、time-picker、calendar等，本文主要对tc-trigger源码进行解读。 结构项目结构如">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/antd源码解读（二）Tooltip组件解析/1.jpeg">
+<meta property="og:updated_time" content="2018-05-01T14:32:38.973Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="antd源码解读（二）Tooltip组件解析">
+<meta name="twitter:description" content="引言antd的Tooltip组件在react-componment/trigger的基础上进行封装，而组件Popover和Popconfirm是使用Tooltip组件的进行pop，在react-componment中，使用到组件tc-trigger的还有menu、select、dropdown、time-picker、calendar等，本文主要对tc-trigger源码进行解读。 结构项目结构如">
+<meta name="twitter:image" content="http://yoursite.com/images/antd源码解读（二）Tooltip组件解析/1.jpeg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/01/antd源码解析(二)Tooltip组件解析/"/>
+
+
+
+
+
+  <title>antd源码解读（二）Tooltip组件解析 | 杨溜溜的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">杨溜溜的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">记录学习的技能和遇到的问题</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/01/antd源码解析(二)Tooltip组件解析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="杨溜溜">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/icon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="杨溜溜的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">antd源码解读（二）Tooltip组件解析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-01T20:00:13+08:00">
+                2018-05-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>antd的Tooltip组件在<a href="https://github.com/react-component/trigger" target="_blank" rel="noopener">react-componment/trigger</a>的基础上进行封装，而组件Popover和Popconfirm是使用Tooltip组件的进行pop，在<a href="https://github.com/react-component" target="_blank" rel="noopener">react-componment</a>中，使用到组件<code>tc-trigger</code>的还有menu、select、dropdown、time-picker、calendar等，本文主要对<code>tc-trigger</code>源码进行解读。</p>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p>项目结构如下：</p>
+<p><img src="/images/antd源码解读（二）Tooltip组件解析/1.jpeg" alt="项目结构"></p>
+<ul>
+<li>index.js，负责外层封装，负责事件绑定与dom渲染控制。</li>
+<li>LazyRenderBox.js，pop内容懒加载warp。</li>
+<li>mock.js 未使用。</li>
+<li>Popup.js，pop的warp，负责控制pop的对齐、动画、宽高。</li>
+<li>PopupInner.js，pop内容warp。</li>
+</ul>
+<h3 id="index-js"><a href="#index-js" class="headerlink" title="index.js"></a>index.js</h3><p>从render方法入手，需要渲染控制pop显示的节点和pop内容节点两个节点，而pop内容节点一般渲染到body里面，不属于控制pop显示的节点内，render方法代码如下：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">const trigger = React.cloneElement(child, newChildProps);</span><br><span class="line">if (!IS_REACT_16) &#123;</span><br><span class="line">  return (</span><br><span class="line">    <span class="tag">&lt;<span class="name">ContainerRender</span></span></span><br><span class="line"><span class="tag">      <span class="attr">parent</span>=<span class="string">&#123;this&#125;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">visible</span>=<span class="string">&#123;popupVisible&#125;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">autoMount</span>=<span class="string">&#123;false&#125;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">forceRender</span>=<span class="string">&#123;props.forceRender&#125;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">getComponent</span>=<span class="string">&#123;this.getComponent&#125;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">getContainer</span>=<span class="string">&#123;this.getContainer&#125;</span></span></span><br><span class="line"><span class="tag">    &gt;</span></span><br><span class="line">      &#123;(&#123; renderComponent &#125;) =&gt; &#123;</span><br><span class="line">        this.renderComponent = renderComponent;</span><br><span class="line">        return trigger;</span><br><span class="line">      &#125;&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">ContainerRender</span>&gt;</span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">let portal;</span><br><span class="line">// prevent unmounting after it's rendered</span><br><span class="line">if (popupVisible || this._component || props.forceRender) &#123;</span><br><span class="line">  portal = (</span><br><span class="line">    <span class="tag">&lt;<span class="name">Portal</span></span></span><br><span class="line"><span class="tag">      <span class="attr">key</span>=<span class="string">"portal"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">getContainer</span>=<span class="string">&#123;this.getContainer&#125;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">didUpdate</span>=<span class="string">&#123;this.handlePortalUpdate&#125;</span></span></span><br><span class="line"><span class="tag">    &gt;</span></span><br><span class="line">      &#123;this.getComponent()&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">Portal</span>&gt;</span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">return [</span><br><span class="line">  trigger,</span><br><span class="line">  portal,</span><br><span class="line">];</span><br></pre></td></tr></table></figure></p>
+<p>可以看到，index.js渲染了两个节点，trigger和portal，trigger即为通过事件控制portal显示状态的节点，如果react的版本不是16以上，返回ContainerRender组件，ContainerRender组件来自<code>rc-util</code>，该组件主要做的事情就是使用<code>ReactDOM.unstable_renderSubtreeIntoContainer</code>函数，将pop内容渲染到trigger节点之外，与react16提供的API<code>createPortal</code>作用一致，如果是React16，返回了Portal组件，该组件正是利用了createPortal，将组件渲染到特定的dom节点内，但是不管是不是react16，都进行了pop渲染的判断，即<code>popupVisible || this._component || props.forceRender</code>，如果portal不显示且不强制第一次渲染<code>forceRender</code>，portal将不会被渲染到dom中，直到判断为真。</p>
+<p>trigger节点通过props决定事件绑定情况，即通过<code>props.trigger</code>属性绑定事件情况，事件控制Popup组件的visible属性，这里就不详细说了。</p>
+<h3 id="Popup-js"><a href="#Popup-js" class="headerlink" title="Popup.js"></a>Popup.js</h3><p>该组件是pop的warp，渲染在trigger节点之外，通过<code>ReactDOM.unstable_renderSubtreeIntoContainer</code>或<code>createPortal</code>指定渲染的目标节点，也是render方法入手：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">render() &#123;</span><br><span class="line">  return (</span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">      &#123;this.getMaskElement()&#125;</span><br><span class="line">      &#123;this.getPopupElement()&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>返回两个内容，<code>getMaskElement</code>获取遮罩，<code>getPopupElement</code>返回Pop节点，getMaskElement这里就不说了，渲染的视觉效果，绑定了控制pop节点的事件。</p>
+<p>getPopupElement返回pop节点，render返回代码如下:<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Animate</span></span></span><br><span class="line"><span class="tag">  <span class="attr">component</span>=<span class="string">""</span></span></span><br><span class="line"><span class="tag">  <span class="attr">exclusive</span></span></span><br><span class="line"><span class="tag">  <span class="attr">transitionAppear</span></span></span><br><span class="line"><span class="tag">  <span class="attr">transitionName</span>=<span class="string">&#123;this.getTransitionName()&#125;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">showProp</span>=<span class="string">"xVisible"</span></span></span><br><span class="line"><span class="tag">&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Align</span></span></span><br><span class="line"><span class="tag">    <span class="attr">target</span>=<span class="string">&#123;this.getTarget&#125;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">key</span>=<span class="string">"popup"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">ref</span>=<span class="string">&#123;this.saveAlignRef&#125;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">monitorWindowResize</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xVisible</span>=<span class="string">&#123;visible&#125;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">childrenProps</span>=<span class="string">&#123;&#123;</span> <span class="attr">visible:</span> '<span class="attr">xVisible</span>' &#125;&#125;</span></span><br><span class="line"><span class="tag">    <span class="attr">disabled</span>=<span class="string">&#123;!visible&#125;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">align</span>=<span class="string">&#123;align&#125;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">onAlign</span>=<span class="string">&#123;this.onAlign&#125;</span></span></span><br><span class="line"><span class="tag">  &gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">PopupInner</span></span></span><br><span class="line"><span class="tag">      <span class="attr">hiddenClassName</span>=<span class="string">&#123;hiddenClassName&#125;</span></span></span><br><span class="line"><span class="tag">      &#123;<span class="attr">...popupInnerProps</span>&#125;</span></span><br><span class="line"><span class="tag">    &gt;</span></span><br><span class="line">      &#123;children&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">PopupInner</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">Align</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Animate</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>Animate来自组件<a href="https://github.com/react-component/animate" target="_blank" rel="noopener">rc-animate</a>，主要负责显示状态切换时候的动态效果，其中原理是监听控制状态变化的prop属性，即代码中的<code>showProp=&quot;xVisible&quot;</code>，当状态变化的时候，延时改变dom的class，一般会有三个状态，分别表示进入中enter-active，消失中leave-active，隐藏hidden三个状态，进入中状态会添加<code>transitionName-enter transitionName-enter-active</code>两个class，消失中会添加<code>transitionName-leave transitionName-leave-active</code>两个class，隐藏状态不添加class，transitionName通过外部传入。</p>
+<p>Align来自组件<a href="https://github.com/react-component/align" target="_blank" rel="noopener">rc-align</a>，主要控制节点的相对于trigger的显示位置，根据传入的target与align决定最后PopupInner显示的位置，此处target是来自于index.js的trigger节点，align也是来自于index.js，主要由index.js的prop.popupPlacement、prop.popupAlign两个属性决定，即方向与偏移量。</p>
+<p>最后是PopupInner组件，该组件是也就pop内容组件，内容通过LazyRenderBox包裹。。。</p>
+<p>另外，Popup.js还有两个state，targetWidth与targetHeight，即pop的宽高，该属性如果设置有prop.stretch，则计算trigger真是dom节点的宽高，然后对齐。</p>
+<h3 id="PopupInner-js"><a href="#PopupInner-js" class="headerlink" title="PopupInner.js"></a>PopupInner.js</h3><p>为隐藏状态下的pop添加hidden的class，并包裹懒加载组件LazyRenderBox。</p>
+<h3 id="LazyRenderBox-js"><a href="#LazyRenderBox-js" class="headerlink" title="LazyRenderBox.js"></a>LazyRenderBox.js</h3><p>只做一件事情，就是将popupInner的chidren进行包裹，当子节点数大于1时，包一层div以方便隐藏状态时候class控制，不用每个节点都添加hidden的class，关键如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">render() &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; hiddenClassName, visible, ...props &#125; = <span class="keyword">this</span>.props;</span><br><span class="line">  <span class="keyword">if</span> (hiddenClassName || React.Children.count(props.children) &gt; <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!visible &amp;&amp; hiddenClassName) &#123;</span><br><span class="line">      props.className += <span class="string">` <span class="subst">$&#123;hiddenClassName&#125;</span>`</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span> &#123;<span class="attr">...props</span>&#125;/&gt;</span>;</span></span><br><span class="line"><span class="xml">  &#125;</span></span><br><span class="line"><span class="xml">  return React.Children.only(props.children);</span></span><br><span class="line"><span class="xml">&#125;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>该组件主要的实现难点在于<a href="https://github.com/react-component/animate" target="_blank" rel="noopener">rc-animate</a>与<a href="https://github.com/react-component/align" target="_blank" rel="noopener">rc-align</a>，其他的主要在做事件绑定与class处理。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/react/" rel="tag"># react</a>
+          
+            <a href="/tags/antd/" rel="tag"># antd</a>
+          
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/15/antd源码解读(一)Form组件解析/" rel="next" title="antd源码解读（一）Form组件解析">
+                <i class="fa fa-chevron-left"></i> antd源码解读（一）Form组件解析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/icon.jpg"
+                alt="杨溜溜" />
+            
+              <p class="site-author-name" itemprop="name">杨溜溜</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">2.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#index-js"><span class="nav-number">3.</span> <span class="nav-text">index.js</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Popup-js"><span class="nav-number">4.</span> <span class="nav-text">Popup.js</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PopupInner-js"><span class="nav-number">5.</span> <span class="nav-text">PopupInner.js</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LazyRenderBox-js"><span class="nav-number">6.</span> <span class="nav-text">LazyRenderBox.js</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最后"><span class="nav-number">7.</span> <span class="nav-text">最后</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">杨溜溜</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

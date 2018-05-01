@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="前端,CSS," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="第一章 尽量减少代码重复：代码可维护性的最大要素是尽量减少改动时要编辑的地方。 关于响应式设计：每个媒体查询都会增加成本。 合理使用简写：合理使用简写是一种良好的防卫性编码方式，可以抵御未来的风险。如果只为某个属性提供一个值，那 它就会扩散并应用到列表中的每一项。 关于CSS预处理：如果使用得当，它们在大型项目中可以让代码更加灵活。缺点，CSS 的文件体积和复杂度可能会失控，调试难度会增加，预处理">
+<meta name="keywords" content="前端,CSS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《CSS揭秘》读书笔记">
+<meta property="og:url" content="http://yoursite.com/2018/03/20/《CSS揭秘》读书笔记/index.html">
+<meta property="og:site_name" content="杨溜溜的博客">
+<meta property="og:description" content="第一章 尽量减少代码重复：代码可维护性的最大要素是尽量减少改动时要编辑的地方。 关于响应式设计：每个媒体查询都会增加成本。 合理使用简写：合理使用简写是一种良好的防卫性编码方式，可以抵御未来的风险。如果只为某个属性提供一个值，那 它就会扩散并应用到列表中的每一项。 关于CSS预处理：如果使用得当，它们在大型项目中可以让代码更加灵活。缺点，CSS 的文件体积和复杂度可能会失控，调试难度会增加，预处理">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-15T07:28:37.844Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《CSS揭秘》读书笔记">
+<meta name="twitter:description" content="第一章 尽量减少代码重复：代码可维护性的最大要素是尽量减少改动时要编辑的地方。 关于响应式设计：每个媒体查询都会增加成本。 合理使用简写：合理使用简写是一种良好的防卫性编码方式，可以抵御未来的风险。如果只为某个属性提供一个值，那 它就会扩散并应用到列表中的每一项。 关于CSS预处理：如果使用得当，它们在大型项目中可以让代码更加灵活。缺点，CSS 的文件体积和复杂度可能会失控，调试难度会增加，预处理">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/20/《CSS揭秘》读书笔记/"/>
+
+
+
+
+
+  <title>《CSS揭秘》读书笔记 | 杨溜溜的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">杨溜溜的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">记录学习的技能和遇到的问题</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/20/《CSS揭秘》读书笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="杨溜溜">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/icon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="杨溜溜的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">《CSS揭秘》读书笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-20T16:41:44+08:00">
+                2018-03-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="第一章"><a href="#第一章" class="headerlink" title="第一章"></a>第一章</h2><ol>
+<li>尽量减少代码重复：代码可维护性的最大要素是尽量减少改动时要编辑的地方。</li>
+<li>关于响应式设计：每个媒体查询都会增加成本。</li>
+<li>合理使用简写：合理使用简写是一种良好的防卫性编码方式，可以抵御未来的风险。如果只为某个属性提供一个值，那 它就会扩散并应用到列表中的每一项。</li>
+<li>关于CSS预处理：如果使用得当，它们在大型项目中可以让代码更加灵活。缺点，CSS 的文件体积和复杂度可能会失控，调试难度会增加，预处理器在开发过程中引入了一定程度的延时。</li>
+</ol>
+<h2 id="第二章-背景与边框"><a href="#第二章-背景与边框" class="headerlink" title="第二章 背景与边框"></a>第二章 背景与边框</h2><ol>
+<li>半透明边框：hsla、rgba、background-clip处理。</li>
+<li>多重边框：box-shadow逗号分隔多重投影、outline+border双重边框。</li>
+<li>背景定位：background-position、background-origin背景定位模式、calc计算背景位置。</li>
+<li>边框与圆角：border-radius</li>
+<li>条纹背景：线性渐变linear-gradient及background-size背景大小</li>
+<li>复杂的背景图案：background-image与linear-gradient的逗号分隔、background-position结合使用。</li>
+<li>连续的图案边框：background、linear-gradient、background-size、background-clip、background-origin结合使用。</li>
+</ol>
+<h2 id="第三章-形状"><a href="#第三章-形状" class="headerlink" title="第三章 形状"></a>第三章 形状</h2><ol>
+<li>自适应椭圆： border-radius水平方向与垂直方向，斜杠。</li>
+<li>平行四边形：transform的skewX，文字反向skewX。</li>
+<li>菱形：transform的rotate。</li>
+<li>切片效果：直角切片linear-gradient、弧形切片radial-gradient，clip-path的polygon。</li>
+<li>梯形标签页：transform-origin、transform的perspective、rotateX使用。</li>
+</ol>
+<h2 id="第四章-视觉效果"><a href="#第四章-视觉效果" class="headerlink" title="第四章 视觉效果"></a>第四章 视觉效果</h2><ol>
+<li>单侧投影：box-shadow。</li>
+<li>不规则投影：filter的drop-shadow。</li>
+<li>染色效果：filter的sepia、saturate、hue-rotate。background-blend-mode的luminosity。</li>
+<li>毛玻璃效果：filter的blur以及伪元素的使用。</li>
+</ol>
+<h2 id="第七章-布局与结构"><a href="#第七章-布局与结构" class="headerlink" title="第七章 布局与结构"></a>第七章 布局与结构</h2><ol>
+<li>自适应内部元素：width的min-content使用。</li>
+<li>精确控制表格列宽：table-layout的fixed、text-overflow的ellipsis。</li>
+<li>根据兄弟元素的数量来设置样式：:nth-child(an+b)、:nth-last-child(an+b)、~选择器</li>
+<li>满幅的背景，定宽的内容：calc使用。</li>
+<li>垂直居中：定位方案、calc使用、transform。</li>
+</ol>
+<h2 id="第八章-过渡与动画"><a href="#第八章-过渡与动画" class="headerlink" title="第八章 过渡与动画"></a>第八章 过渡与动画</h2><ol>
+<li>缓慢动画：动画的基本使用、ease使用、transition-timing-function的cubic-bezier设置贝塞尔调速函数。</li>
+<li>逐帧动画：animation的steps设置逐帧调速函数使用。</li>
+<li>闪烁效果：animation-direction反正动画循环alternate、reverse、alternate-reverse。</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+          
+            <a href="/tags/CSS/" rel="tag"># CSS</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/06/前端知识杂项(二)/" rel="next" title="前端知识杂项（二）">
+                <i class="fa fa-chevron-left"></i> 前端知识杂项（二）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/28/vue.js学习笔记/" rel="prev" title="vue.js学习笔记(一)">
+                vue.js学习笔记(一) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/icon.jpg"
+                alt="杨溜溜" />
+            
+              <p class="site-author-name" itemprop="name">杨溜溜</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第一章"><span class="nav-number">1.</span> <span class="nav-text">第一章</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二章-背景与边框"><span class="nav-number">2.</span> <span class="nav-text">第二章 背景与边框</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三章-形状"><span class="nav-number">3.</span> <span class="nav-text">第三章 形状</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四章-视觉效果"><span class="nav-number">4.</span> <span class="nav-text">第四章 视觉效果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第七章-布局与结构"><span class="nav-number">5.</span> <span class="nav-text">第七章 布局与结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第八章-过渡与动画"><span class="nav-number">6.</span> <span class="nav-text">第八章 过渡与动画</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">杨溜溜</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="react,d3.js,力导向图," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前段时间由于性能要求，需把项目d3的版本从v3升级到v4，据了解d3由于在v4版本之前是没有进行模块化的，所以v3代码的扩展性是比较差的，考虑到长远之计，d3在v4版本算是对代码进行了模块化的重构吧，给开发者提供了一些可定制化的东西，所有api变化较大，这个坑还需各种研究文档才能填完，好了，下面开始我的表演了。 初始化force布局初始化函数从v3的d3.layout.force()变成v4的d3">
+<meta name="keywords" content="react,d3.js,力导向图">
+<meta property="og:type" content="article">
+<meta property="og:title" content="react和d3.js(v4)力导向图force结合使用">
+<meta property="og:url" content="http://yoursite.com/2017/11/29/d3-react/index.html">
+<meta property="og:site_name" content="杨溜溜的博客">
+<meta property="og:description" content="前段时间由于性能要求，需把项目d3的版本从v3升级到v4，据了解d3由于在v4版本之前是没有进行模块化的，所以v3代码的扩展性是比较差的，考虑到长远之计，d3在v4版本算是对代码进行了模块化的重构吧，给开发者提供了一些可定制化的东西，所有api变化较大，这个坑还需各种研究文档才能填完，好了，下面开始我的表演了。 初始化force布局初始化函数从v3的d3.layout.force()变成v4的d3">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-15T07:28:37.834Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="react和d3.js(v4)力导向图force结合使用">
+<meta name="twitter:description" content="前段时间由于性能要求，需把项目d3的版本从v3升级到v4，据了解d3由于在v4版本之前是没有进行模块化的，所以v3代码的扩展性是比较差的，考虑到长远之计，d3在v4版本算是对代码进行了模块化的重构吧，给开发者提供了一些可定制化的东西，所有api变化较大，这个坑还需各种研究文档才能填完，好了，下面开始我的表演了。 初始化force布局初始化函数从v3的d3.layout.force()变成v4的d3">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/11/29/d3-react/"/>
+
+
+
+
+
+  <title>react和d3.js(v4)力导向图force结合使用 | 杨溜溜的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">杨溜溜的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">记录学习的技能和遇到的问题</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/29/d3-react/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="杨溜溜">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/icon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="杨溜溜的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">react和d3.js(v4)力导向图force结合使用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-29T15:21:24+08:00">
+                2017-11-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前段时间由于性能要求，需把项目d3的版本从v3升级到v4，据了解d3由于在v4版本之前是没有进行模块化的，所以v3代码的扩展性是比较差的，考虑到长远之计，d3在v4版本算是对代码进行了模块化的重构吧，给开发者提供了一些可定制化的东西，所有api变化较大，这个坑还需各种研究文档才能填完，好了，下面开始我的表演了。</p>
+<h3 id="初始化force布局"><a href="#初始化force布局" class="headerlink" title="初始化force布局"></a>初始化force布局</h3><p>初始化函数从v3的<code>d3.layout.force()</code>变成v4的<code>d3.forceSimulation()</code>，部分参数设置方式如下:<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.force = d3.forceSimulation().alphaDecay(<span class="number">0.1</span>) <span class="comment">// 设置alpha衰减系数</span></span><br><span class="line">                .force(<span class="string">"link"</span>, d3.forceLink().distance(<span class="number">100</span>)) <span class="comment">// distance为连线的距离设置</span></span><br><span class="line">                .force(<span class="string">'collide'</span>, d3.forceCollide().radius(<span class="function"><span class="params">()</span> =&gt;</span> <span class="number">30</span>)) <span class="comment">// collide 为节点指定一个radius区域来防止节点重叠。</span></span><br><span class="line">                .force(<span class="string">"charge"</span>, d3.forceManyBody().strength(<span class="number">-400</span>))  <span class="comment">// 节点间的作用力</span></span><br></pre></td></tr></table></figure></p>
+<p>为布局添加点和线<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.force.nodes(nodes)   <span class="comment">// 节点数据</span></span><br><span class="line">          .force(<span class="string">'link'</span>, d3.forceLink(links).distance(<span class="number">150</span>));  <span class="comment">// 连线数据 distance为连线的距离设置</span></span><br><span class="line">          .alpha(<span class="number">1</span>);  <span class="comment">// 设置alpha值，让里导向图有初始动力</span></span><br><span class="line">          .restart();   <span class="comment">// 启动仿真计时器</span></span><br></pre></td></tr></table></figure></p>
+<p>由于在v4版本中nodes的<code>x</code>、<code>y</code>坐标和加速度<code>vx</code>、<code>vy</code>只在nodes中计算一次，所有在变成有节点或连线增加的时候，必须重新执行一次<code>force.nodes(nodes)</code>和<code>force(&#39;link&#39;, d3.forceLink(links))</code>，初始化节点的数据结构。如果在v3版本中，只需在布局初始化时执行即可，在d3会在每次<code>force.start()</code>方法执行时重新初始化一次节点和连线的数据结构，这是一个特别需要注意的地方，另外在v4版本中<code>start</code>方法被遗弃，需使用<code>restart</code>方法。</p>
+<h3 id="react部分"><a href="#react部分" class="headerlink" title="react部分"></a>react部分</h3><p>将节点的dom结构交给react来控制，方便在节点上添加事件。以下为svg渲染部分代码。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">render() &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; width, height, nodes, links, scale, translate, selecting, grabbing &#125; = <span class="keyword">this</span>.props.store;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;svg id=<span class="string">"svg"</span> ref=<span class="string">"svg"</span> width=&#123;width&#125; height=&#123;height&#125;</span><br><span class="line">        className=&#123;cn(&#123;</span><br><span class="line">          grab: !selecting &amp;&amp; !grabbing,</span><br><span class="line">          grabbing: !selecting &amp;&amp; grabbing</span><br><span class="line">        &#125;)&#125;</span><br><span class="line">        &gt;</span><br><span class="line">        &lt;g id=<span class="string">"outg"</span> ref=<span class="string">"outg"</span> transform=&#123;<span class="string">`translate(<span class="subst">$&#123;translate&#125;</span>)scale(<span class="subst">$&#123;scale&#125;</span>)`</span>&#125;&gt;</span><br><span class="line">          &lt;g ref=<span class="string">"lines"</span> className=<span class="string">"lines"</span>&gt;</span><br><span class="line">            links.map(<span class="function"><span class="params">link</span> =&gt;</span> (</span><br><span class="line">                &lt;line</span><br><span class="line">                  key=&#123;<span class="string">`<span class="subst">$&#123;link.source.uid&#125;</span>_<span class="subst">$&#123;link.target.uid&#125;</span>`</span>&#125;</span><br><span class="line">                  ref=&#123;child =&gt; <span class="keyword">this</span>.links[<span class="string">`<span class="subst">$&#123;link.source.uid&#125;</span>_<span class="subst">$&#123;link.target.uid&#125;</span>`</span>] = child&#125;</span><br><span class="line">                  x1=&#123;link.source.x&#125;</span><br><span class="line">                  y1=&#123;link.source.y&#125;</span><br><span class="line">                  x2=&#123;link.target.x&#125;</span><br><span class="line">                  y2=&#123;link.target.y&#125;/&gt;</span><br><span class="line">              ))</span><br><span class="line">          &lt;<span class="regexp">/g&gt;</span></span><br><span class="line"><span class="regexp">          &lt;g ref="nodes" className="nodes"&gt;</span></span><br><span class="line"><span class="regexp">            &#123;</span></span><br><span class="line"><span class="regexp">              nodes.map(node =&gt; (</span></span><br><span class="line"><span class="regexp">                &lt;Node key=&#123;node.uid&#125;</span></span><br><span class="line"><span class="regexp">                  node=&#123;node&#125;</span></span><br><span class="line"><span class="regexp">                  store=&#123;this.props.store&#125;</span></span><br><span class="line"><span class="regexp">                  addRef=&#123;child =&gt; this.nodes[node.uid] = child&#125;/</span>&gt;</span><br><span class="line">              ))</span><br><span class="line">            &#125;</span><br><span class="line">          &lt;<span class="regexp">/g&gt;</span></span><br><span class="line"><span class="regexp">        &lt;/g</span>&gt;</span><br><span class="line">      &lt;<span class="regexp">/svg&gt;</span></span><br><span class="line"><span class="regexp">    );</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br></pre></td></tr></table></figure></p>
+<p>Node.js 节点<br>以下为Node Component部分代码</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Node</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; node, addRef, store &#125; = <span class="keyword">this</span>.props;</span><br><span class="line">    <span class="keyword">const</span> &#123; force &#125; = store;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;g className=<span class="string">"node"</span></span><br><span class="line">        ref=&#123;child =&gt; &#123;</span><br><span class="line">          <span class="keyword">this</span>._node = child;</span><br><span class="line">          addRef(child);</span><br><span class="line">        &#125;&#125;</span><br><span class="line">        transform=&#123;<span class="string">`translate(<span class="subst">$&#123;node.x || width <span class="regexp">/ 2&#125;,$&#123;node.y || height /</span> <span class="number">2</span>&#125;</span>)`</span>&#125;</span><br><span class="line">        &gt;</span><br><span class="line">        &lt;g id=&#123;node.nodeIndex&#125;&gt;</span><br><span class="line">          <span class="comment">// 节点图片dom</span></span><br><span class="line">        &lt;<span class="regexp">/g&gt;</span></span><br><span class="line"><span class="regexp">        &#123;</span></span><br><span class="line"><span class="regexp">          node.locked &amp;&amp; (</span></span><br><span class="line"><span class="regexp">            &lt;Lock</span></span><br><span class="line"><span class="regexp">              x=&#123;10&#125;</span></span><br><span class="line"><span class="regexp">              y=&#123;10&#125;</span></span><br><span class="line"><span class="regexp">              release=&#123;() =&gt; &#123;   /</span><span class="regexp">/ 解锁节点</span></span><br><span class="line"><span class="regexp">                node.fixed = false;</span></span><br><span class="line"><span class="regexp">                node.locked = false;</span></span><br><span class="line"><span class="regexp">                node.fx = null;   /</span><span class="regexp">/ 当节点的fx、fy都为null时，节点处于活动状态</span></span><br><span class="line"><span class="regexp">                node.fy = null;   </span></span><br><span class="line"><span class="regexp">                force.alpha(0.3).restart();  /</span><span class="regexp">/ 释放锁定节点时需设置alpha值并重启计时器，使得布局可以运动。</span></span><br><span class="line"><span class="regexp">              &#125;&#125;</span></span><br><span class="line"><span class="regexp">              /</span>&gt;</span><br><span class="line">          )</span><br><span class="line">        &#125;</span><br><span class="line">      &lt;<span class="regexp">/g&gt;</span></span><br><span class="line"><span class="regexp">    );</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">  componentDidMount() &#123;</span></span><br><span class="line"><span class="regexp">    this._node.__data__ = this.props.node;  /</span><span class="regexp">/ 将node节点在d3内部存一份引用，让每次计时器更新的时候自动更改nodes列表中的数据</span></span><br><span class="line"><span class="regexp">    d3.select(this._node)  /</span><span class="regexp">/ 各种事件</span></span><br><span class="line"><span class="regexp">      .on('click', d =&gt; &#123;</span></span><br><span class="line"><span class="regexp">          /</span><span class="regexp">/ code</span></span><br><span class="line"><span class="regexp">      &#125;)</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>Lock.js 节点解除固定按钮。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Lock</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; x, y, fixed &#125; = <span class="keyword">this</span>.props;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;use</span><br><span class="line">        ref=<span class="string">"lock"</span></span><br><span class="line">        xlinkHref=<span class="string">"#lock"</span></span><br><span class="line">        x=&#123;x&#125;</span><br><span class="line">        y=&#123;y&#125;</span><br><span class="line">        /&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  componentDidMount() &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; release &#125; = <span class="keyword">this</span>.props;</span><br><span class="line">    d3.select(<span class="keyword">this</span>.refs.lock)</span><br><span class="line">      .on(<span class="string">'click'</span>, () =&gt; &#123;</span><br><span class="line">        d3.event.stopPropagation();</span><br><span class="line">        release();</span><br><span class="line">      &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="仿真计时器-tick"><a href="#仿真计时器-tick" class="headerlink" title="仿真计时器 tick"></a>仿真计时器 <code>tick</code></h3><p>计时器函数，在仿真启动的过程中，计时器的每一帧都会改变一次之前我们在内部存的引用(<code>this._node.__data__ = this.props.node</code>)的node的数据的<code>x</code>值和<code>y</code>值，这时我们需要更新dom结构中的节点和线偏移量。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">force.on(<span class="string">'tick'</span>, () =&gt; &#123;</span><br><span class="line">  nodes.forEach(<span class="function"><span class="params">node</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!node.lock) &#123;</span><br><span class="line">      d3.select(self.nodes[node.uid]).attr(<span class="string">'transform'</span>, () =&gt; <span class="string">`translate(<span class="subst">$&#123;node.x&#125;</span>,<span class="subst">$&#123;node.y&#125;</span>)`</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">  links.forEach(<span class="function"><span class="params">link</span> =&gt;</span> &#123;</span><br><span class="line">    d3.select(self.links[<span class="string">`<span class="subst">$&#123;link.source.uid&#125;</span>_<span class="subst">$&#123;link.target.uid&#125;</span>`</span>])</span><br><span class="line">      .attr(<span class="string">'x1'</span>, () =&gt; link.source.x)</span><br><span class="line">      .attr(<span class="string">'y1'</span>, () =&gt; link.source.y)</span><br><span class="line">      .attr(<span class="string">'x2'</span>, () =&gt; link.target.x)</span><br><span class="line">      .attr(<span class="string">'y2'</span>, () =&gt; link.target.y);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>在计时器的每一帧中，仿真的<code>alpha</code>系数会不断削减，可通过<code>force.alpha()</code>来获取和设置<code>alpha</code>系数，削减速度由<code>alphaDecay</code>来决定，默认值为0.0228…，衰减系数可通过<code>force.alphaDecay()</code>来获取和设置，当<code>alpha</code>到达一个系数时，仿真将会停止，也就是<code>alpha</code>的目标系数<code>alphaTarget</code>，该值区间为[0,1]. 默认为0，可通过<code>force.alphaTarget()</code>来获取和设置，另外还有一个速度衰减系统<code>velocityDecay</code>，相当于摩擦力。区间为[0,1], 默认为0.4。在每次<code>tick</code>之后，节点的速度都会等于当前速度乘以<code>1-velocityDecay</code>，和<code>alpha</code>衰减类似，速度衰减越慢最终的效果越好，但是如果速度衰减过慢，可能会导致震荡。以上为<code>tick</code>过程的发生。需要注意的是，在v4版本中，<code>tick</code>事件的callback中不带任何参数，在v3版本的’tick’事件中，我们可通过<code>callback(e)</code>中的<code>e.alpha</code>来获取<code>alpha</code>值，而在v4版本中，<code>alpha</code>值只能通过<code>force.alpha()</code>来获取。</p>
+<h3 id="拖拽-Drag"><a href="#拖拽-Drag" class="headerlink" title="拖拽 Drag"></a>拖拽 Drag</h3><p>创建拖拽操作<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> startTime = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">this</span>.drag = d3.drag()</span><br><span class="line">      .on(<span class="string">'start'</span>, (d) =&gt; &#123;</span><br><span class="line">        startTime = (<span class="keyword">new</span> <span class="built_in">Date</span>()).getTime();</span><br><span class="line">        d3.event.sourceEvent.stopPropagation();</span><br><span class="line">        <span class="keyword">if</span> (!d3.event.active) &#123;</span><br><span class="line">           <span class="keyword">this</span>.force.alphaTarget(<span class="number">0.3</span>).restart();  <span class="comment">// 当前alpha值为0，需设置alphaTarget让节点动起来</span></span><br><span class="line">        &#125;</span><br><span class="line">        d.fx = d.x;</span><br><span class="line">        d.fy = d.y;</span><br><span class="line">      &#125;)</span><br><span class="line">      .on(<span class="string">'drag'</span>, d =&gt; &#123;</span><br><span class="line">        <span class="keyword">this</span>.grabbing = <span class="literal">true</span>;</span><br><span class="line">        d.fx = d3.event.x;</span><br><span class="line">        d.fy = d3.event.y;</span><br><span class="line">      &#125;)</span><br><span class="line">      .on(<span class="string">'end'</span>, d =&gt; &#123;</span><br><span class="line">        <span class="keyword">const</span> nowTime = (<span class="keyword">new</span> <span class="built_in">Date</span>()).getTime();</span><br><span class="line">        <span class="keyword">if</span> (!d3.event.active) &#123;</span><br><span class="line">           <span class="keyword">this</span>.force.alphaTarget(<span class="number">0</span>);  <span class="comment">// 让alpha目标值值恢复为默认值0</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (nowTime - startTime &gt;= <span class="number">150</span>) &#123;  <span class="comment">// 操作150毫秒的拖拽固定节点</span></span><br><span class="line">          d.fixed = <span class="literal">true</span>;</span><br><span class="line">          d.locked = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">this</span>.grabbing = <span class="literal">false</span>;</span><br><span class="line">      &#125;);</span><br></pre></td></tr></table></figure></p>
+<p>将拖拽操作应用到指定的选择集。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">d3.select(<span class="string">'#outg'</span>).selectAll(<span class="string">'.node'</span>).call(<span class="keyword">this</span>.drag);</span><br></pre></td></tr></table></figure></p>
+<p>在内部，拖拽操作通过<code>selection.on</code>来为元素添加监听事件. 事件监听器使用 .drag 来标识这是一个拖拽事件。拖拽drag的v4版本与v3不同的是，v3通过<code>force.drag()</code>创建拖拽操作，拖拽过程事件使用<code>dragstart</code>、<code>drag</code>、<code>dragend</code>，在拖拽过程中d3内部自动设置<code>alpha</code>相关系数让节点运动起来，而在v4中版本中需要手动设置。</p>
+<h3 id="缩放-Zoom"><a href="#缩放-Zoom" class="headerlink" title="缩放 Zoom"></a>缩放 Zoom</h3><p>在v4版本中，缩放操作通过<code>transform</code>对象进行，可以通过<code>d3.zoomTransform(selection.node())</code>获取指定节点的缩放状态，也可以通过<code>d3.event.transform</code>来获取当前正在缩放的节点的缩放状态。<br>与拖拽类似，需要先创建缩放操作。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> self = <span class="keyword">this</span>;</span><br><span class="line"><span class="keyword">const</span> outg = d3.select(<span class="string">'#outg'</span>);</span><br><span class="line"><span class="keyword">this</span>.zoomObj = d3.zoom()</span><br><span class="line">      .scaleExtent([<span class="number">0.2</span>, <span class="number">4</span>]) <span class="comment">// 缩放范围</span></span><br><span class="line">      .on(<span class="string">'zoom'</span>,() =&gt; &#123;</span><br><span class="line">        <span class="keyword">const</span> transform = d3.event.transform;</span><br><span class="line">        self.scale = transform.k;  <span class="comment">// 保存当前缩放大小</span></span><br><span class="line">        self.translate = [transform.x, transform.y];  <span class="comment">// 保存当前便宜量</span></span><br><span class="line">        outg.attr(<span class="string">'transform'</span>, transform);   <span class="comment">// 设置缩放和偏移量 transform对象自带toString()方法</span></span><br><span class="line">      &#125;)</span><br><span class="line">      .on(<span class="string">'end'</span>, () =&gt; &#123;</span><br><span class="line">        <span class="comment">// code</span></span><br><span class="line">      &#125;)</span><br></pre></td></tr></table></figure></p>
+<p>将缩放操作应用于选择集，并取消双击操作<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> svg = d3.select(<span class="string">'#svg'</span>);</span><br><span class="line">svg.call(<span class="keyword">this</span>.zoomObj).on(<span class="string">'dblclick.zoom'</span>, <span class="literal">null</span>);</span><br></pre></td></tr></table></figure></p>
+<p>如果要禁止滚轮滚动缩放，可以在讲zoom事件应用于选择集之后移除zoom事件中的滚轮事件：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svg.call(<span class="keyword">this</span>.zoomObj).on(<span class="string">"wheel.zoom"</span>, <span class="literal">null</span>);</span><br></pre></td></tr></table></figure></p>
+<p>当缩放事件被调用，<code>d3.event</code>会被设置为当前的zoom事件，<code>zoom event</code>对象由以下几部分组成:</p>
+<ul>
+<li><code>target</code> - 当前的缩放zoom behavior。</li>
+<li><code>type</code> - 事件类型:“start”, “zoom” 或者 “end”，参考 zoom.on。</li>
+<li><code>transform</code> - 当前的zoom transform(缩放变换)。</li>
+<li><code>sourceEvent</code> - 原始事件, 比如 mousemove 或 touchmove。<br>通过按钮缩放、定位视图。<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.zoomObj.transform(d3.select(<span class="string">'#svg'</span>), d3.zoomIdentity.translate(newX,newY).scale(newScale))</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>在v3版本中，可以通过<code>zoom.scale(s)</code>和<code>zoom.translate(x, y)</code>设置缩放和偏移量后通过使用’zoom.event(selection)’方法应用到指定选择节点，而在v4中版本需要通过<code>d3.zoomIdentity</code>创建新<code>transform</code>对象，并通过<code>translate(x, y)</code>和<code>scale(s)</code>方法设置偏移量和缩放级别，然后将该<code>transform</code>应用到选择集中。另外也可以通过<code>zoom.translateBy(selection, x, y)</code>、<code>zoom.translateTo(selection, x, y)</code>、<code>zoom.scaleBy(selection, k)</code>、<code>zoom.scaleTo(selection, k)</code>方法进行变换。</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>由于api变动较大，v3升级v4需要耐心看api，查看各个部分的变化，所以，升级需谨慎。最后附上<a href="https://github.com/xswei/d3js_doc" target="_blank" rel="noopener">d3.js v4.0中文api</a>。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/react/" rel="tag"># react</a>
+          
+            <a href="/tags/d3-js/" rel="tag"># d3.js</a>
+          
+            <a href="/tags/力导向图/" rel="tag"># 力导向图</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/18/react-router/" rel="next" title="react-router v3学习整理">
+                <i class="fa fa-chevron-left"></i> react-router v3学习整理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/20/java-nashorn/" rel="prev" title="Java使用Nashorn，调用Promise实现服务端渲染">
+                Java使用Nashorn，调用Promise实现服务端渲染 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/icon.jpg"
+                alt="杨溜溜" />
+            
+              <p class="site-author-name" itemprop="name">杨溜溜</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化force布局"><span class="nav-number">1.</span> <span class="nav-text">初始化force布局</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#react部分"><span class="nav-number">2.</span> <span class="nav-text">react部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#仿真计时器-tick"><span class="nav-number">3.</span> <span class="nav-text">仿真计时器 tick</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#拖拽-Drag"><span class="nav-number">4.</span> <span class="nav-text">拖拽 Drag</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缩放-Zoom"><span class="nav-number">5.</span> <span class="nav-text">缩放 Zoom</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">6.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">杨溜溜</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

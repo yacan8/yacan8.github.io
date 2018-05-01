@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="java,nashorn,promise," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Nashorn JavaScript引擎是Java SE 8 的一部分，并且和其它独立的引擎例如 Google V8（用于Google Chrome和Node.js的引擎）互相竞争。Nashorn通过在JVM上，以原生方式运行动态的JavaScript代码来扩展Java的功能。 使用NashornJava代码中简单的HelloWorld如下所示：12ScriptEngine engine = ne">
+<meta name="keywords" content="java,nashorn,promise">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java使用Nashorn，调用Promise实现服务端渲染">
+<meta property="og:url" content="http://yoursite.com/2018/01/20/java-nashorn/index.html">
+<meta property="og:site_name" content="杨溜溜的博客">
+<meta property="og:description" content="Nashorn JavaScript引擎是Java SE 8 的一部分，并且和其它独立的引擎例如 Google V8（用于Google Chrome和Node.js的引擎）互相竞争。Nashorn通过在JVM上，以原生方式运行动态的JavaScript代码来扩展Java的功能。 使用NashornJava代码中简单的HelloWorld如下所示：12ScriptEngine engine = ne">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-15T07:28:37.836Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java使用Nashorn，调用Promise实现服务端渲染">
+<meta name="twitter:description" content="Nashorn JavaScript引擎是Java SE 8 的一部分，并且和其它独立的引擎例如 Google V8（用于Google Chrome和Node.js的引擎）互相竞争。Nashorn通过在JVM上，以原生方式运行动态的JavaScript代码来扩展Java的功能。 使用NashornJava代码中简单的HelloWorld如下所示：12ScriptEngine engine = ne">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/20/java-nashorn/"/>
+
+
+
+
+
+  <title>Java使用Nashorn，调用Promise实现服务端渲染 | 杨溜溜的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">杨溜溜的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">记录学习的技能和遇到的问题</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/20/java-nashorn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="杨溜溜">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/icon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="杨溜溜的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java使用Nashorn，调用Promise实现服务端渲染</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-20T15:21:41+08:00">
+                2018-01-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Nashorn JavaScript引擎是Java SE 8 的一部分，并且和其它独立的引擎例如 <a href="https://code.google.com/p/v8/" target="_blank" rel="noopener">Google V8</a>（用于Google Chrome和Node.js的引擎）互相竞争。Nashorn通过在JVM上，以原生方式运行动态的JavaScript代码来扩展Java的功能。</p>
+<h2 id="使用Nashorn"><a href="#使用Nashorn" class="headerlink" title="使用Nashorn"></a>使用Nashorn</h2><p>Java代码中简单的HelloWorld如下所示：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ScriptEngine engine = <span class="keyword">new</span> ScriptEngineManager().getEngineByName(<span class="string">"nashorn"</span>);</span><br><span class="line">engine.eval(<span class="string">"print('Hello World!');"</span>);</span><br></pre></td></tr></table></figure></p>
+<p>为了在Java中执行JavaScript，你首先要通过javax.script包创建脚本引擎。<br>JavaScript代码既可以通过传递JavaScript代码字符串，也可以传递指向你的JS脚本文件的<code>FileReader</code>来执行：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ScriptEngine engine = <span class="keyword">new</span> ScriptEngineManager().getEngineByName(<span class="string">"nashorn"</span>);</span><br><span class="line">engine.eval(<span class="keyword">new</span> FileReader(<span class="string">"script.js"</span>));</span><br></pre></td></tr></table></figure></p>
+<p>Nashorn JavaScript基于 <a href="http://es5.github.io/" target="_blank" rel="noopener">ECMAScript 5.1</a>，但是它的后续版本会对ES6提供支持：</p>
+<blockquote>
+<p>Nashorn的当前策略遵循ECMAScript规范。当我们在JDK8中发布它时，它将基于ECMAScript 5.1。Nashorn未来的主要发布基于ECMAScript 6。</p>
+<h2 id="在Java中调用JavaScript函数"><a href="#在Java中调用JavaScript函数" class="headerlink" title="在Java中调用JavaScript函数"></a>在Java中调用JavaScript函数</h2><p>Nashorn 支持从Java代码中直接调用定义在脚本文件中的JavaScript函数。你可以将Java对象传递为函数参数，并且从函数返回数据来调用Java方法。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> fun1 = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">    print(<span class="string">'Hi there from Javascript, '</span> + name);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"greetings from javascript"</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> fun2 = <span class="function"><span class="keyword">function</span> (<span class="params">object</span>) </span>&#123;</span><br><span class="line">    print(<span class="string">"JS Class Definition: "</span> + <span class="built_in">Object</span>.prototype.toString.call(object));</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<p><code>ScriptEngine</code>内置了<code>invokeFunction</code>方法，提调用javascript函数并返回结果。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ScriptEngine engine = <span class="keyword">new</span> ScriptEngineManager().getEngineByName(<span class="string">"nashorn"</span>);</span><br><span class="line">engine.eval(<span class="keyword">new</span> FileReader(<span class="string">"script.js"</span>));</span><br><span class="line"></span><br><span class="line">Object result = invocable.invokeFunction(<span class="string">"fun1"</span>, <span class="string">"Peter Parker"</span>);</span><br><span class="line">System.out.println(result);</span><br><span class="line">System.out.println(result.getClass());</span><br><span class="line"></span><br><span class="line"><span class="comment">// Hi there from Javascript, Peter Parker</span></span><br><span class="line"><span class="comment">// greetings from javascript</span></span><br><span class="line"><span class="comment">// class java.lang.String</span></span><br></pre></td></tr></table></figure></p>
+<p>##在JavaScript中调用Java方法<br>在JavaScript中调用Java方法十分容易。我们首先需要定义一个Java静态方法。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> String <span class="title">fun1</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">    System.out.format(<span class="string">"Hi there from Java, %s"</span>, name);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"greetings from java"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Java类可以通过<code>Java.type</code>API扩展在JavaScript中引用。它就和Java代码中的import类似。只要定义了Java类型，我们就可以自然地调用静态方法fun1()，然后像sout打印信息。由于方法是静态的，我们不需要首先创建实例。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> MyJavaClass = Java.type(<span class="string">'my.package.MyJavaClass'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> result = MyJavaClass.fun1(<span class="string">'John Doe'</span>);</span><br><span class="line">print(result);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Hi there from Java, John Doe</span></span><br><span class="line"><span class="comment">// greetings from java</span></span><br></pre></td></tr></table></figure></p>
+<p>在使用JavaScript原生类型调用Java方法时，Nashorn 如何处理类型转换？让我们通过简单的例子来弄清楚。<br>下面的Java方法简单打印了方法参数的实际类型：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">fun2</span><span class="params">(Object object)</span> </span>&#123;</span><br><span class="line">    System.out.println(object.getClass());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>为了理解背后如何处理类型转换，我们使用不同的JavaScript类型来调用这个方法：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">MyJavaClass.fun2(<span class="number">123</span>);</span><br><span class="line"><span class="comment">// class java.lang.Integer</span></span><br><span class="line"></span><br><span class="line">MyJavaClass.fun2(<span class="number">49.99</span>);</span><br><span class="line"><span class="comment">// class java.lang.Double</span></span><br><span class="line"></span><br><span class="line">MyJavaClass.fun2(<span class="literal">true</span>);</span><br><span class="line"><span class="comment">// class java.lang.Boolean</span></span><br><span class="line"></span><br><span class="line">MyJavaClass.fun2(<span class="string">"hi there"</span>)</span><br><span class="line"><span class="comment">// class java.lang.String</span></span><br><span class="line"></span><br><span class="line">MyJavaClass.fun2(<span class="keyword">new</span> <span class="built_in">Number</span>(<span class="number">23</span>));</span><br><span class="line"><span class="comment">// class jdk.nashorn.internal.objects.NativeNumber</span></span><br><span class="line"></span><br><span class="line">MyJavaClass.fun2(<span class="keyword">new</span> <span class="built_in">Date</span>());</span><br><span class="line"><span class="comment">// class jdk.nashorn.internal.objects.NativeDate</span></span><br><span class="line"></span><br><span class="line">MyJavaClass.fun2(<span class="keyword">new</span> <span class="built_in">RegExp</span>());</span><br><span class="line"><span class="comment">// class jdk.nashorn.internal.objects.NativeRegExp</span></span><br><span class="line"></span><br><span class="line">MyJavaClass.fun2(&#123;<span class="attr">foo</span>: <span class="string">'bar'</span>&#125;);</span><br><span class="line"><span class="comment">// class jdk.nashorn.internal.scripts.JO4</span></span><br></pre></td></tr></table></figure></p>
+<p>JavaScript原始类型转换为合适的Java包装类，而JavaScript原生对象会使用内部的适配器类来表示。要记住<code>jdk.nashorn.internal</code>中的类可能会有所变化，所以不应该在客户端面向这些类来编程。</p>
+<p>##ScriptObjectMirror<br>在向Java传递原生JavaScript对象时，你可以使用<code>ScriptObjectMirror</code>类，它实际上是底层JavaScript对象的Java表示。<code>ScriptObjectMirror</code>实现了<code>Map</code>接口，位于<code>jdk.nashorn.api</code>中。这个包中的类可以用于客户端代码。</p>
+<p>下面的例子将参数类型从<code>Object</code>改为<code>ScriptObjectMirror</code>，所以我们可以从传入的JavaScript对象中获得一些信息。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">fun3</span><span class="params">(ScriptObjectMirror mirror)</span> </span>&#123;</span><br><span class="line">    System.out.println(mirror.getClassName() + <span class="string">": "</span> +</span><br><span class="line">        Arrays.toString(mirror.getOwnKeys(<span class="keyword">true</span>)));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当向这个方法传递对象（哈希表）时，在Java端可以访问其属性：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">MyJavaClass.fun3(&#123;</span><br><span class="line">    foo: <span class="string">'bar'</span>,</span><br><span class="line">    bar: <span class="string">'foo'</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Object: [foo, bar]</span></span><br></pre></td></tr></table></figure></p>
+<p>我们也可以在Java中调用JavaScript的成员函数。让我们首先定义JavaScript <code>Person</code>类型，带有属性<code>firstName</code> 和 <code>lastName</code>，以及方法<code>getFullName</code>。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">firstName, lastName</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.firstName = firstName;</span><br><span class="line">    <span class="keyword">this</span>.lastName = lastName;</span><br><span class="line">    <span class="keyword">this</span>.getFullName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.firstName + <span class="string">" "</span> + <span class="keyword">this</span>.lastName;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>JavaScript方法<code>getFullName</code>可以通过<code>callMember()</code>在<code>ScriptObjectMirror</code>上调用。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">fun4</span><span class="params">(ScriptObjectMirror person)</span> </span>&#123;</span><br><span class="line">    System.out.println(<span class="string">"Full Name is: "</span> + person.callMember(<span class="string">"getFullName"</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当向Java方法传递新的<code>Person</code>时，我们会在控制台看到预期的结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var person1 = new Person(&quot;Peter&quot;, &quot;Parker&quot;);</span><br><span class="line">MyJavaClass.fun4(person1);</span><br><span class="line"></span><br><span class="line">// Full Name is: Peter Parker</span><br></pre></td></tr></table></figure></p>
+<h2 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h2><p>通过使用promise实现服务端渲染。</p>
+<h3 id="polyfill"><a href="#polyfill" class="headerlink" title="polyfill"></a>polyfill</h3><p>由于当前Nashorn基于es5，不支持部分es6对象，我们需要引入polyfill文件，<a href="https://www.npmjs.com/package/nashorn-polyfill" target="_blank" rel="noopener">nashorn-polyfill</a>。<br>该polyfill通过java与JavaScript的结合使用，使Nashorn支持<code>console</code>, <code>process</code>, <code>Blob</code>, <code>Promise</code>等对象和<code>setTimeout</code>, <code>clearTimeout</code>, <code>setInterval</code>, <code>clearInterval</code>等函数。</p>
+<h3 id="Nashorn工具类"><a href="#Nashorn工具类" class="headerlink" title="Nashorn工具类"></a>Nashorn工具类</h3><p>实例化工具类，通过该类操作Javascript对象。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NashornHelper</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 用于本类的日志</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger       logger                       = LoggerFactory.getLogger(NashornHelper.class);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String       JAVASCRIPT_DIR               = <span class="string">"static"</span>; <span class="comment">// js文件目录</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String       LIB_DIR                      = JAVASCRIPT_DIR + File.separator + <span class="string">"lib"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String[]     VENDOR_FILE_NAME             = &#123;<span class="string">"vendor.js"</span>&#125;; <span class="comment">// webpack打包的三方库，如react，lodash</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String       SRC_DIR                      = JAVASCRIPT_DIR + File.separator + <span class="string">"src"</span>; <span class="comment">// 文件目录</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String       POLYFILL_FILE_NAME           = <span class="string">"nashorn-polyfill.js"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> NashornScriptEngine engine;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> NashornHelper      nashornHelper;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ScriptContext            sc                        = <span class="keyword">new</span> SimpleScriptContext();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ScheduledExecutorService globalScheduledThreadPool = Executors.newScheduledThreadPool(<span class="number">20</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 单例模式</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> NashornHelper <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (nashornHelper == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">long</span> start = System.currentTimeMillis();</span><br><span class="line">            nashornHelper = <span class="keyword">new</span> NashornHelper();</span><br><span class="line">            <span class="keyword">long</span> end = System.currentTimeMillis();</span><br><span class="line">            logger.error(<span class="string">"init nashornHelper cost time &#123;&#125;ms"</span>, (end - start));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> nashornHelper;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">NashornHelper</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">long</span> start = System.currentTimeMillis();</span><br><span class="line">        engine = (NashornScriptEngine) <span class="keyword">new</span> ScriptEngineManager().getEngineByName(<span class="string">"nashorn"</span>);</span><br><span class="line">        Bindings bindings = <span class="keyword">new</span> SimpleBindings();</span><br><span class="line">        bindings.put(<span class="string">"logger"</span>, logger); <span class="comment">// 向nashorn引擎注入logger对象</span></span><br><span class="line">        sc.setBindings(engine.createBindings(), ScriptContext.ENGINE_SCOPE);</span><br><span class="line">        sc.getBindings(ScriptContext.ENGINE_SCOPE).putAll(bindings);</span><br><span class="line">        sc.setAttribute(<span class="string">"__IS_SSR__"</span>, <span class="keyword">true</span>, ScriptContext.ENGINE_SCOPE);</span><br><span class="line">        sc.setAttribute(<span class="string">"__NASHORN_POLYFILL_TIMER__"</span>, globalScheduledThreadPool, ScriptContext.ENGINE_SCOPE);</span><br><span class="line">        engine.setBindings(sc.getBindings(ScriptContext.ENGINE_SCOPE), ScriptContext.ENGINE_SCOPE);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">long</span> end = System.currentTimeMillis();</span><br><span class="line">        logger.info(<span class="string">"init nashornHelper cost time &#123;&#125;ms"</span>, (end - start));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;  <span class="comment">// 执行js文件</span></span><br><span class="line">            engine.eval(read(LIB_DIR + File.separator + POLYFILL_FILE_NAME));</span><br><span class="line">            <span class="keyword">for</span> (String fileName : NashornHelper.VENDOR_FILE_NAME) &#123;</span><br><span class="line">                engine.eval(read(SRC_DIR + File.separator + fileName));</span><br><span class="line">            &#125;</span><br><span class="line">            engine.eval(read(SRC_DIR + File.separator + <span class="string">"app.js"</span>));</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ScriptException e) &#123;</span><br><span class="line">            logger.error(<span class="string">"load javascript failed."</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 获取Nashorn作用域下的对象</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ScriptObjectMirror <span class="title">getGlobalGlobalMirrorObject</span><span class="params">(String objectName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (ScriptObjectMirror) engine.getBindings(ScriptContext.ENGINE_SCOPE).get(objectName);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 调用全局方法</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">callRender</span><span class="params">(String methodName, Object... input)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> engine.invokeFunction(methodName, input);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ScriptException e) &#123;</span><br><span class="line">            logger.error(<span class="string">"run javascript failed."</span>, e);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (NoSuchMethodException e) &#123;</span><br><span class="line">            logger.error(<span class="string">"no such method."</span>, e);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 读取文件</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> Reader <span class="title">read</span><span class="params">(String path)</span> </span>&#123;</span><br><span class="line">        InputStream in = getClass().getClassLoader().getResourceAsStream(path);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> InputStreamReader(in);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>实例化工具类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NashornHelper engine = NashornHelper.getInstance();</span><br></pre></td></tr></table></figure></p>
+<p>执行调用javasript，java中获取<code>promise</code>对象<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ScriptObjectMirror promise = (ScriptObjectMirror) engine.callRender(<span class="string">"ssr_render"</span>);</span><br></pre></td></tr></table></figure></p>
+<p>执行<code>promise</code>的<code>then</code>方法，等待执行完成并回调<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">promise.callMember(<span class="string">"then"</span>, fnResolve);</span><br><span class="line">ScriptObjectMirror nashornEventLoop = engine.getGlobalGlobalMirrorObject(<span class="string">"nashornEventLoop"</span>);</span><br><span class="line"></span><br><span class="line">nashornEventLoop.callMember(<span class="string">"process"</span>); <span class="comment">// 执行nashornEventLoops.process()使主线程执行回调函数</span></span><br><span class="line"><span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">int</span> jsWaitTimeout = <span class="number">1000</span> * <span class="number">60</span>;</span><br><span class="line"><span class="keyword">int</span> interval = <span class="number">200</span>; <span class="comment">// 等待时间间隔</span></span><br><span class="line"><span class="keyword">int</span> totalWaitTime = <span class="number">0</span>; <span class="comment">// 实际等待时间</span></span><br><span class="line"><span class="keyword">while</span> (!promiseResolved &amp;&amp; totalWaitTime &lt; jsWaitTimeout) &#123;</span><br><span class="line">    nashornEventLoop.callMember(<span class="string">"process"</span>);</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        Thread.sleep(interval);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    totalWaitTime = totalWaitTime + interval;</span><br><span class="line">    <span class="keyword">if</span> (interval &lt; <span class="number">500</span>) interval = interval * <span class="number">2</span>;</span><br><span class="line">    i = i + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>回调函数<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Consumer&lt;Object&gt; fnResolve = object -&gt; &#123;</span><br><span class="line">  <span class="keyword">synchronized</span> (promiseLock) &#123;</span><br><span class="line">      html = (String) object;</span><br><span class="line">      promiseResolved = <span class="keyword">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>最后结果已字符串形式存在<code>html</code>中，可将其渲染到页面中.</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>适用场景非浏览器渲染页面，如java离线渲染前端页面到Pdf。<br>实战 <a href="https://github.com/yacan8/react-ssr-demo" target="_blank" rel="noopener">github地址</a>, <a href="https://github.com/yacan8/react-mobx-todo" target="_blank" rel="noopener">前端js项目地址</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/nashorn/" rel="tag"># nashorn</a>
+          
+            <a href="/tags/promise/" rel="tag"># promise</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/29/d3-react/" rel="next" title="react和d3.js(v4)力导向图force结合使用">
+                <i class="fa fa-chevron-left"></i> react和d3.js(v4)力导向图force结合使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/29/redux/" rel="prev" title="redux从零到入门笔记">
+                redux从零到入门笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/icon.jpg"
+                alt="杨溜溜" />
+            
+              <p class="site-author-name" itemprop="name">杨溜溜</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Nashorn"><span class="nav-number">1.</span> <span class="nav-text">使用Nashorn</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在Java中调用JavaScript函数"><span class="nav-number">2.</span> <span class="nav-text">在Java中调用JavaScript函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实战"><span class="nav-number">3.</span> <span class="nav-text">实战</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#polyfill"><span class="nav-number">3.1.</span> <span class="nav-text">polyfill</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nashorn工具类"><span class="nav-number">3.2.</span> <span class="nav-text">Nashorn工具类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最后"><span class="nav-number">4.</span> <span class="nav-text">最后</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">杨溜溜</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
