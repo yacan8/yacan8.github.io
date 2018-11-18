@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="canvas," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="矩形 fillRect(x, y, width, height) 填充矩形 strokeRect(x, y, width, height) 绘制矩形边框 clearRect(x, y, width, height) 清除指定矩形区域，让清除部分完全透明。 rect(x, y, width, height) 绘制一个左上角坐标为（x,y），宽高为width以及height的矩形。  绘制矩形 DEM">
+<meta name="keywords" content="canvas">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Canvas API">
+<meta property="og:url" content="http://yoursite.com/2018/09/18/Canvas_API/index.html">
+<meta property="og:site_name" content="杨溜溜的博客">
+<meta property="og:description" content="矩形 fillRect(x, y, width, height) 填充矩形 strokeRect(x, y, width, height) 绘制矩形边框 clearRect(x, y, width, height) 清除指定矩形区域，让清除部分完全透明。 rect(x, y, width, height) 绘制一个左上角坐标为（x,y），宽高为width以及height的矩形。  绘制矩形 DEM">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-11-17T07:57:47.213Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Canvas API">
+<meta name="twitter:description" content="矩形 fillRect(x, y, width, height) 填充矩形 strokeRect(x, y, width, height) 绘制矩形边框 clearRect(x, y, width, height) 清除指定矩形区域，让清除部分完全透明。 rect(x, y, width, height) 绘制一个左上角坐标为（x,y），宽高为width以及height的矩形。  绘制矩形 DEM">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/18/Canvas_API/"/>
+
+
+
+
+
+  <title>Canvas API | 杨溜溜的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">杨溜溜的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">记录学习的技能和遇到的问题</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/18/Canvas_API/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="杨溜溜">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/icon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="杨溜溜的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Canvas API</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-18T19:58:59+08:00">
+                2018-09-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="矩形"><a href="#矩形" class="headerlink" title="矩形"></a>矩形</h2><ol>
+<li>fillRect(x, y, width, height) 填充矩形</li>
+<li>strokeRect(x, y, width, height) 绘制矩形边框</li>
+<li>clearRect(x, y, width, height) 清除指定矩形区域，让清除部分完全透明。</li>
+<li>rect(x, y, width, height) 绘制一个左上角坐标为（x,y），宽高为width以及height的矩形。</li>
+</ol>
+<p><a href="https://jsfiddle.net/yacan8/sbLnkd9o/" target="_blank" rel="noopener">绘制矩形 DEMO</a></p>
+<h2 id="绘制路径"><a href="#绘制路径" class="headerlink" title="绘制路径"></a>绘制路径</h2><ol>
+<li>beginPath() 新建一条路径，生成之后，图形绘制命令被指向到路径上生成路径。</li>
+<li>closePath() 闭合路径，闭合路径之后图形命令又重新指向到上下文中。</li>
+<li>stroke() 通过线条来绘制图形轮廓。</li>
+<li>fill() 通过填充路径的内容区域生成实心图形。</li>
+</ol>
+<p>当你调用fill()函数时，所有没有闭合的形状都会自动闭合，所以你不需要调用closePath()函数。但是调用stroke()时不会自动闭合。</p>
+<p><a href="https://jsfiddle.net/yacan8/g09j2fc8/" target="_blank" rel="noopener">绘制三角形 DEMO</a></p>
+<h2 id="圆弧"><a href="#圆弧" class="headerlink" title="圆弧"></a>圆弧</h2><ol>
+<li>arc(x, y, radius, startAngle, endAngle, anticlockwise) 画一个以（x,y）为圆心的以radius为半径的圆弧（圆），从startAngle开始到endAngle结束，按照anticlockwise给定的方向（默认为顺时针）来生成。</li>
+<li>arcTo(x1, y1, x2, y2, radius) 根据给定的控制点和半径画一段圆弧，再以直线连接两个控制点。</li>
+</ol>
+<p>arc()函数中表示角的单位是弧度，不是角度。角度与弧度的js表达式: 弧度=(Math.PI/180)*角度。</p>
+<p><a href="https://jsfiddle.net/yacan8/gamtc6v0/" target="_blank" rel="noopener">圆弧DEMO</a></p>
+<h2 id="二次贝塞尔曲线及三次贝塞尔曲线"><a href="#二次贝塞尔曲线及三次贝塞尔曲线" class="headerlink" title="二次贝塞尔曲线及三次贝塞尔曲线"></a>二次贝塞尔曲线及三次贝塞尔曲线</h2><ol>
+<li>quadraticCurveTo(cp1x, cp1y, x, y) 绘制二次贝塞尔曲线，cp1x,cp1y为一个控制点，x,y为结束点。</li>
+<li>bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y) 绘制三次贝塞尔曲线，cp1x,cp1y为控制点一，cp2x,cp2y为控制点二，x,y为结束点。</li>
+</ol>
+<p><a href="https://jsfiddle.net/yacan8/wunr4q3L/" target="_blank" rel="noopener">二次贝塞尔曲线DEMO</a><br><a href="https://jsfiddle.net/yacan8/asbd92zy/" target="_blank" rel="noopener">三次贝塞尔曲线DEMO</a></p>
+<h2 id="色彩"><a href="#色彩" class="headerlink" title="色彩"></a>色彩</h2><ol>
+<li>fillStyle = color 设置图形的填充颜色。</li>
+<li>strokeStyle = color 设置图形轮廓的颜色。</li>
+</ol>
+<p>支持使用 rgba 形式。</p>
+<p><a href="https://jsfiddle.net/yacan8/q043f9j8/1/" target="_blank" rel="noopener">fillStyle DEMO</a><br><a href="https://jsfiddle.net/yacan8/demcxsky/1/" target="_blank" rel="noopener">strokeStyle DEMO</a></p>
+<h2 id="透明度"><a href="#透明度" class="headerlink" title="透明度"></a>透明度</h2><ol>
+<li>globalAlpha = transparencyValue 这个属性影响到 canvas 里所有图形的透明度，有效的值范围是 0.0 （完全透明）到 1.0（完全不透明），默认是 1.0。</li>
+</ol>
+<p>globalAlpha 属性在需要绘制大量拥有相同透明度的图形时候相当高效。相反，如果对单个元素添加透明度，推荐使用 rgba 形式。</p>
+<p><a href="https://jsfiddle.net/yacan8/bx63L72t/1/" target="_blank" rel="noopener">透明度 DEMO</a><br><a href="https://jsfiddle.net/yacan8/bx63L72t/2/" target="_blank" rel="noopener">rgba() DEMO</a></p>
+<h2 id="移动触笔"><a href="#移动触笔" class="headerlink" title="移动触笔"></a>移动触笔</h2><ol>
+<li>moveTo(x, y) 将笔触移动到指定的坐标x以及y上。</li>
+</ol>
+<p>当canvas初始化或者beginPath()调用后，你通常会使用moveTo()函数设置起点。我们也能够使用moveTo()绘制一些不连续的路径。</p>
+<p><a href="https://jsfiddle.net/yacan8/0mb4jc5a/" target="_blank" rel="noopener">移动触笔 DEMO</a></p>
+<h2 id="线"><a href="#线" class="headerlink" title="线"></a>线</h2><ol>
+<li>lineTo(x, y) 绘制一条从当前位置到指定x以及y位置的直线。</li>
+</ol>
+<p>开始点也可以通过moveTo()函数改变。</p>
+<p><a href="https://jsfiddle.net/yacan8/pqmx92nf/" target="_blank" rel="noopener">绘制两个三角形 DEMO</a></p>
+<h3 id="线型"><a href="#线型" class="headerlink" title="线型"></a>线型</h3><ol>
+<li>lineWidth = value 设置线条宽度。</li>
+<li>lineCap = type 设置线条末端样式。<br>选项：<br>butt 线段末端以方形结束。<br>round 线段末端以圆形结束。<br>square 线段末端以方形结束，但是增加了一个宽度和线段相同，高度是线段厚度一半的矩形区域。</li>
+<li>lineJoin = type 设定线条与线条间接合处的样式。<br>选项：<br>round 通过填充一个额外的，圆心在相连部分末端的扇形，绘制拐角的形状。 圆角的半径是线段的宽度。<br>bevel 在相连部分的末端填充一个额外的以三角形为底的区域， 每个部分都有各自独立的矩形拐角。<br>miter 通过延伸相连部分的外边缘，使其相交于一点，形成一个额外的菱形区域。这个设置可以通过 miterLimit 属性看到效果。</li>
+<li>miterLimit = value 限制当两条线相交时交接处最大长度；所谓交接处长度（斜接长度）是指线条交接处内角顶点到外角顶点的长度。</li>
+<li>getLineDash() 返回一个包含当前虚线样式，长度为非负偶数的数组。</li>
+<li>setLineDash(segments) 设置当前虚线样式。例：ctx.setLineDash([4, 16]);</li>
+<li>lineDashOffset = value 设置虚线样式的起始偏移量。</li>
+</ol>
+<p><a href="https://jsfiddle.net/yacan8/kx79j1mh/" target="_blank" rel="noopener">lineWidth DEMO</a><br><a href="https://jsfiddle.net/yacan8/epbfmoqz/" target="_blank" rel="noopener">lineCap DEMO</a><br><a href="https://jsfiddle.net/yacan8/awkqzhpb/" target="_blank" rel="noopener">lineJoin DEMO</a></p>
+<h2 id="渐变"><a href="#渐变" class="headerlink" title="渐变"></a>渐变</h2><ol>
+<li>createLinearGradient()方法创建一个沿参数坐标指定的直线的渐变。这个方法返回 CanvasGradient。</li>
+<li><p>createRadialGradient() 是 Canvas 2D API 根据参数确定两个圆的坐标，绘制放射性渐变的方法。这个方法返回 CanvasGradient。</p>
+</li>
+<li><p>gradient.addColorStop(position, color) addColorStop 方法接受 2 个参数，position 参数必须是一个 0.0 与 1.0 之间的数值，表示渐变中颜色所在的相对位置。例如，0.5 表示颜色会出现在正中间。color 参数必须是一个有效的 CSS 颜色值（如 #FFF， rgba(0,0,0,1)，等等）。</p>
+</li>
+</ol>
+<p><a href="https://jsfiddle.net/yacan8/q9bftno1/1/" target="_blank" rel="noopener">createLinearGradient DEMO</a><br><a href="https://jsfiddle.net/yacan8/u4dow7Lq/" target="_blank" rel="noopener">createRadialGradient DEMO</a></p>
+<h2 id="图案样式"><a href="#图案样式" class="headerlink" title="图案样式"></a>图案样式</h2><ol>
+<li>createPattern(image, type) Image 可以是一个 Image 对象的引用，或者另一个 canvas 对象。Type 必须是下面的字符串值之一：repeat，repeat-x，repeat-y 和 no-repeat。</li>
+</ol>
+<p>如：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> img = <span class="keyword">new</span> Image();</span><br><span class="line">img.src = <span class="string">'someimage.png'</span>;</span><br><span class="line"><span class="keyword">var</span> ptrn = ctx.createPattern(img,<span class="string">'repeat'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>与 drawImage 有点不同，你需要确认 image 对象已经装载完毕，否则图案可能效果不对的。</p>
+<p><a href="https://jsfiddle.net/yacan8/xb4c13za/" target="_blank" rel="noopener">createPattern DEMO</a></p>
+<h2 id="阴影"><a href="#阴影" class="headerlink" title="阴影"></a>阴影</h2><ol>
+<li>shadowOffsetX = float 设定阴影在 X 轴的延伸距离。</li>
+<li>shadowOffsetY = float 设定阴影在 Y 轴的延伸距离。</li>
+<li>shadowBlur = float 用于设定阴影的模糊程度，其数值并不跟像素数量挂钩，也不受变换矩阵的影响，默认为 0。</li>
+<li>shadowColor = color 是标准的 CSS 颜色值，用于设定阴影颜色效果，默认是全透明的黑色。</li>
+</ol>
+<p><a href="https://jsfiddle.net/yacan8/w23eovym/" target="_blank" rel="noopener">文字阴影 DEMO</a></p>
+<h2 id="绘制文本"><a href="#绘制文本" class="headerlink" title="绘制文本"></a>绘制文本</h2><ol>
+<li>fillText(text, x, y [, maxWidth]) 在指定的(x,y)位置填充指定的文本，绘制的最大宽度是可选的.</li>
+<li>strokeText(text, x, y [, maxWidth]) 在指定的(x,y)位置绘制文本边框，绘制的最大宽度是可选的.</li>
+<li>font = value 这个字符串使用和 CSS font 属性相同的语法. 默认的字体是 10px sans-serif。</li>
+<li>textAlign = value 文本对齐选项. 可选的值包括：start, end, left, right or center. 默认值是 start。</li>
+<li>textBaseline = value 基线对齐选项. 可选的值包括：top, hanging, middle, alphabetic, ideographic, bottom。默认值是 alphabetic。</li>
+<li>direction = value 文本方向。可能的值包括：ltr, rtl, inherit。默认值是 inherit。</li>
+<li>measureText() 将返回一个 TextMetrics对象的宽度、所在像素，这些体现文本特性的属性。</li>
+</ol>
+<p><a href="https://jsfiddle.net/yacan8/Lyw1rga0/" target="_blank" rel="noopener">textBaseline DEMO</a></p>
+<h2 id="使用图片"><a href="#使用图片" class="headerlink" title="使用图片"></a>使用图片</h2><p>canvas的API可以使用下面这些类型中的一种作为图片的源：</p>
+<ol>
+<li>HTMLImageElement 这些图片是由Image()函数构造出来的，或者任何的\<img\>元素</img\></li>
+<li>HTMLVideoElement 用一个HTML的 \<video\>元素作为你的图片源，可以从视频中抓取当前帧作为一个图像</video\></li>
+<li>HTMLCanvasElement 可以使用另一个 \<canvas\> 元素作为你的图片源。</canvas\></li>
+<li>ImageBitmap 这是一个高性能的位图，可以低延迟地绘制，它可以从上述的所有源以及其它几种源中生成。</li>
+</ol>
+<p>这些源统一由 <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasImageSource" target="_blank" rel="noopener">CanvasImageSource</a> 类型来引用。</p>
+<p>例：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> img = <span class="keyword">new</span> Image();   <span class="comment">// 创建img元素</span></span><br><span class="line">img.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="comment">// 执行drawImage语句</span></span><br><span class="line">&#125;</span><br><span class="line">img.src = <span class="string">'myImage.png'</span>; <span class="comment">// 设置图片源地址</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="绘制图片"><a href="#绘制图片" class="headerlink" title="绘制图片"></a>绘制图片</h3><ol>
+<li>drawImage(image, x, y) 其中 image 是 image 或者 canvas 对象，x 和 y 是其在目标 canvas 里的起始坐标。</li>
+<li>drawImage(image, x, y, width, height) 缩放 Scaling，这个方法多了2个参数：width 和 height，这两个参数用来控制 当向canvas画入时应该缩放的大小</li>
+<li>drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight) 第一个参数和其它的是相同的，都是一个图像或者另一个 canvas 的引用。其它8个参数最好是参照右边的图解，前4个是定义图像源的切片位置和大小，后4个则是定义切片的目标显示位置和大小。</li>
+</ol>
+<h2 id="状态的保存和恢复"><a href="#状态的保存和恢复" class="headerlink" title="状态的保存和恢复"></a>状态的保存和恢复</h2><ol>
+<li>save()</li>
+<li>restore()</li>
+</ol>
+<p>save 和 restore 方法是用来保存和恢复 canvas 状态的，都没有参数。Canvas 的状态就是当前画面应用的所有样式和变形的一个快照。</p>
+<p>Canvas状态存储在栈中，每当save()方法被调用后，当前的状态就被推送到栈中保存。一个绘画状态包括：</p>
+<ul>
+<li>当前应用的变形（即移动，旋转和缩放，见下）</li>
+<li>strokeStyle, fillStyle, globalAlpha, lineWidth, lineCap, lineJoin, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, globalCompositeOperation 的值</li>
+<li>当前的裁切路径（clipping path）</li>
+</ul>
+<p>每一次调用 restore 方法，上一个保存的状态就从栈中弹出，所有设定都恢复。</p>
+<p><a href="https://jsfiddle.net/yacan8/p7d34yte/" target="_blank" rel="noopener">save 和 restore DEMO</a></p>
+<h2 id="变形"><a href="#变形" class="headerlink" title="变形"></a>变形</h2><ol>
+<li>translate(x, y) 偏移 translate 方法接受两个参数。x 是左右偏移量，y 是上下偏移量。</li>
+<li>rotate(angle) 这个方法只接受一个参数：旋转的角度(angle)，它是顺时针方向的，以弧度为单位的值。</li>
+<li>scale(x, y) scale 方法接受两个参数。x,y 分别是横轴和纵轴的缩放因子，它们都必须是正值。值比 1.0 小表示缩小，比 1.0 大则表示放大，值为 1.0 时什么效果都没有。</li>
+<li>transform(m11, m12, m21, m22, dx, dy)<br>这个函数的参数，各自代表：<br>m11：水平方向的缩放，<br>m12：水平方向的倾斜偏移，<br>m21：竖直方向的倾斜偏移，<br>m22：竖直方向的缩放，<br>dx：水平方向的移动，<br>dy：竖直方向的移动。</li>
+<li>setTransform(m11, m12, m21, m22, dx, dy) 这个方法会将当前的变形矩阵重置为单位矩阵，然后用相同的参数调用 transform 方法。</li>
+<li>resetTransform() =&gt; setTransform(1, 0, 0, 1, 0, 0)。</li>
+</ol>
+<p><a href="https://jsfiddle.net/yacan8/vs82kham/" target="_blank" rel="noopener">translate DEMO</a><br><a href="https://jsfiddle.net/yacan8/xgwtapbq/" target="_blank" rel="noopener">rotate DEMO</a></p>
+<h2 id="组合"><a href="#组合" class="headerlink" title="组合"></a>组合</h2><ol>
+<li>globalCompositeOperation = type 这个属性设定了在画新图形时采用的遮盖策略，其值是一个标识12种遮盖方式的字符串，详情 type 参见 <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Canvas_API/Tutorial/Compositing/Example" target="_blank" rel="noopener">Compositing 示例</a>;</li>
+</ol>
+<h2 id="裁切路径"><a href="#裁切路径" class="headerlink" title="裁切路径"></a>裁切路径</h2><p>裁切路径和普通的 canvas 图形差不多，不同的是它的作用是遮罩，用来隐藏不需要的部分。</p>
+<p>如果和 globalCompositeOperation 属性作一比较，它可以实现与 source-in 和 source-atop差不多的效果。</p>
+<ol>
+<li>clip() 方法来创建一个新的裁切路径。</li>
+</ol>
+<p><a href="https://jsfiddle.net/yacan8/8vabj1yp/" target="_blank" rel="noopener">clip DEMO</a></p>
+<h2 id="动画"><a href="#动画" class="headerlink" title="动画"></a>动画</h2><h3 id="动画的基本步骤"><a href="#动画的基本步骤" class="headerlink" title="动画的基本步骤"></a>动画的基本步骤</h3><p>你可以通过以下的步骤来画出一帧:</p>
+<ol>
+<li><p>清空 canvas。除非接下来要画的内容会完全充满 canvas （例如背景图），否则你需要清空所有。最简单的做法就是用 clearRect 方法。<br>保存 canvas 状态<br>如果你要改变一些会改变 canvas 状态的设置（样式，变形之类的），又要在每画一帧之时都是原始状态的话，你需要先保存一下。</p>
+</li>
+<li><p>绘制动画图形（animated shapes）。这一步才是重绘动画帧。</p>
+</li>
+<li><p>恢复 canvas 状态。如果已经保存了 canvas 的状态，可以先恢复它，然后重绘下一帧。</p>
+</li>
+</ol>
+<h3 id="操控动画"><a href="#操控动画" class="headerlink" title="操控动画"></a>操控动画</h3><ol>
+<li>setInterval(function, delay) 当设定好间隔时间后，function会定期执行。</li>
+<li>setTimeout(function, delay) 在设定好的时间之后执行函数。</li>
+<li>requestAnimationFrame(callback) 告诉浏览器你希望执行一个动画，并在重绘之前，请求浏览器执行一个特定的函数来更新动画。</li>
+</ol>
+<p><a href="https://jsfiddle.net/yacan8/0x1Lft57/1/" target="_blank" rel="noopener">太阳系的动画 DEMO</a><br><a href="https://jsfiddle.net/yacan8/6834fyrk/" target="_blank" rel="noopener">动画时钟 DEMO</a><br><a href="https://jsfiddle.net/yacan8/21Lwqvg8/" target="_blank" rel="noopener">循环全局 DEMO</a></p>
+<h4 id="小球-DEMO"><a href="#小球-DEMO" class="headerlink" title="小球 DEMO"></a>小球 DEMO</h4><p><a href="https://jsfiddle.net/yacan8/0n72q6pg/" target="_blank" rel="noopener">首个预览</a><br><a href="https://jsfiddle.net/yacan8/hL9y6tkc/" target="_blank" rel="noopener">加速度</a><br><a href="https://jsfiddle.net/yacan8/p8qLed60/" target="_blank" rel="noopener">长尾效果</a><br><a href="https://jsfiddle.net/yacan8/dqat0w9h/" target="_blank" rel="noopener">添加鼠标控制</a></p>
+<h2 id="像素操作"><a href="#像素操作" class="headerlink" title="像素操作"></a>像素操作</h2><h3 id="ImageData对象"><a href="#ImageData对象" class="headerlink" title="ImageData对象"></a>ImageData对象</h3><p>ImageData 对象中存储着canvas对象真实的像素数据，它包含以下几个只读属性：</p>
+<ol>
+<li>width 图片宽度，单位是像素</li>
+<li>height 图片高度，单位是像素</li>
+<li>data <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray" target="_blank" rel="noopener">Uint8ClampedArray</a> 类型的一维数组，包含着RGBA格式的整型数据，范围在0至255之间（包括255）。</li>
+</ol>
+<p>data属性返回一个 Uint8ClampedArray，它可以被使用作为查看初始像素数据。每个像素用4个1bytes值(按照红，绿，蓝和透明值的顺序; 这就是”RGBA”格式) 来代表。每个颜色值部份用0至255来代表。每个部份被分配到一个在数组内连续的索引，左上角像素的红色部份在数组的索引0位置。像素从左到右被处理，然后往下，遍历整个数组。</p>
+<h3 id="创建ImageData对象"><a href="#创建ImageData对象" class="headerlink" title="创建ImageData对象"></a>创建ImageData对象</h3><p>去创建一个新的，空白的ImageData对象，你应该会使用createImageData() 方法。有2个版本的createImageData()方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myImageData = ctx.createImageData(width, height);</span><br></pre></td></tr></table></figure>
+<p>得到场景像素数据，为了获得一个包含画布场景像素数据的ImageData对像，你可以用getImageData()方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myImageData = ctx.getImageData(left, top, width, height);</span><br></pre></td></tr></table></figure>
+<p>这个方法会返回一个ImageData对象，它代表了画布区域的对象数据，此画布的四个角落分别表示为(left, top), (left + width, top), (left, top + height), 以及(left + width, top + height)四个点。这些坐标点被设定为画布坐标空间元素。</p>
+<p>在场景中写入像素数据，可以用putImageData()方法去对场景进行像素数据的写入。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ctx.putImageData(myImageData, dx, dy);</span><br></pre></td></tr></table></figure>
+<p>dx和dy参数表示你希望在场景内左上角绘制的像素数据所得到的设备坐标。</p>
+<h3 id="保存图片"><a href="#保存图片" class="headerlink" title="保存图片"></a>保存图片</h3><ol>
+<li><p>canvas.toDataURL(type, quality) 创建一个base64的type类型图片，你可以有选择地提供从0到1的 quality 品质量，1表示最好品质，0基本不被辨析但有比较小的文件大小。</p>
+</li>
+<li><p>canvas.toBlob(callback, type, quality) 这个创建了一个在画布中的代表图片的Blob对像，callback：回调函数，可获得一个单独的Blob对象参数。type 可选 DOMString类型，指定图片格式，默认格式为image/png，quality：图片质量。</p>
+</li>
+</ol>
+<p><a href="https://jsfiddle.net/yacan8/zeynLp6v/2/" target="_blank" rel="noopener">颜色选择器 DEMO</a><br><a href="https://jsfiddle.net/yacan8/qaz5t83v/1/" target="_blank" rel="noopener">图片灰度和反相颜色</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/canvas/" rel="tag"># canvas</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/16/记一次React项目Webpack配置过程/" rel="next" title="记一次React项目Webpack4配置过程">
+                <i class="fa fa-chevron-left"></i> 记一次React项目Webpack4配置过程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/26/webpack插件总结/" rel="prev" title="webpack 插件总结归类">
+                webpack 插件总结归类 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/icon.jpg"
+                alt="杨溜溜" />
+            
+              <p class="site-author-name" itemprop="name">杨溜溜</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#矩形"><span class="nav-number">1.</span> <span class="nav-text">矩形</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绘制路径"><span class="nav-number">2.</span> <span class="nav-text">绘制路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#圆弧"><span class="nav-number">3.</span> <span class="nav-text">圆弧</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二次贝塞尔曲线及三次贝塞尔曲线"><span class="nav-number">4.</span> <span class="nav-text">二次贝塞尔曲线及三次贝塞尔曲线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#色彩"><span class="nav-number">5.</span> <span class="nav-text">色彩</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#透明度"><span class="nav-number">6.</span> <span class="nav-text">透明度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#移动触笔"><span class="nav-number">7.</span> <span class="nav-text">移动触笔</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线"><span class="nav-number">8.</span> <span class="nav-text">线</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#线型"><span class="nav-number">8.1.</span> <span class="nav-text">线型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#渐变"><span class="nav-number">9.</span> <span class="nav-text">渐变</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图案样式"><span class="nav-number">10.</span> <span class="nav-text">图案样式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#阴影"><span class="nav-number">11.</span> <span class="nav-text">阴影</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绘制文本"><span class="nav-number">12.</span> <span class="nav-text">绘制文本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用图片"><span class="nav-number">13.</span> <span class="nav-text">使用图片</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#绘制图片"><span class="nav-number">13.1.</span> <span class="nav-text">绘制图片</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#状态的保存和恢复"><span class="nav-number">14.</span> <span class="nav-text">状态的保存和恢复</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变形"><span class="nav-number">15.</span> <span class="nav-text">变形</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组合"><span class="nav-number">16.</span> <span class="nav-text">组合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#裁切路径"><span class="nav-number">17.</span> <span class="nav-text">裁切路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动画"><span class="nav-number">18.</span> <span class="nav-text">动画</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#动画的基本步骤"><span class="nav-number">18.1.</span> <span class="nav-text">动画的基本步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#操控动画"><span class="nav-number">18.2.</span> <span class="nav-text">操控动画</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#小球-DEMO"><span class="nav-number">18.2.1.</span> <span class="nav-text">小球 DEMO</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#像素操作"><span class="nav-number">19.</span> <span class="nav-text">像素操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ImageData对象"><span class="nav-number">19.1.</span> <span class="nav-text">ImageData对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建ImageData对象"><span class="nav-number">19.2.</span> <span class="nav-text">创建ImageData对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#保存图片"><span class="nav-number">19.3.</span> <span class="nav-text">保存图片</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">杨溜溜</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

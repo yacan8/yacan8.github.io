@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="引言原型与原型链一直是JavaScript中的重点与难点，虽然老生常谈了，但是还是需要对其进行深入与巩固。。。。 正文首先是原型，要理解原型，需要知道三个东西;prototype：每个函数都会有的属性，它指向函数的原型对象。（注意：函数对象才有，普通对象没有。）proto：每一个对象都会有个属性，当然，函数也属于对象，所以函数也有这个属性，它指向构造函数的原型对象;constructor：原型对象">
+<meta name="description" content="引言原型与原型链一直是JavaScript中的重点与难点，虽然老生常谈了，但是还是需要对其进行深入与巩固。。。。 正文首先是原型，要理解原型，需要知道三个东西;prototype：每个函数都会有的属性，它指向函数的原型对象。（注意：函数对象才有，普通对象没有。）__proto__：每一个对象都会有个属性，当然，函数也属于对象，所以函数也有这个属性，它指向构造函数的原型对象;constructor：">
 <meta name="keywords" content="JavaScript">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JavaScript原型与原型链的理解">
 <meta property="og:url" content="http://yoursite.com/2018/05/13/JavaScript原型与原型链的理解/index.html">
 <meta property="og:site_name" content="杨溜溜的博客">
-<meta property="og:description" content="引言原型与原型链一直是JavaScript中的重点与难点，虽然老生常谈了，但是还是需要对其进行深入与巩固。。。。 正文首先是原型，要理解原型，需要知道三个东西;prototype：每个函数都会有的属性，它指向函数的原型对象。（注意：函数对象才有，普通对象没有。）proto：每一个对象都会有个属性，当然，函数也属于对象，所以函数也有这个属性，它指向构造函数的原型对象;constructor：原型对象">
+<meta property="og:description" content="引言原型与原型链一直是JavaScript中的重点与难点，虽然老生常谈了，但是还是需要对其进行深入与巩固。。。。 正文首先是原型，要理解原型，需要知道三个东西;prototype：每个函数都会有的属性，它指向函数的原型对象。（注意：函数对象才有，普通对象没有。）__proto__：每一个对象都会有个属性，当然，函数也属于对象，所以函数也有这个属性，它指向构造函数的原型对象;constructor：">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-13T16:34:56.518Z">
+<meta property="og:updated_time" content="2018-11-17T07:57:47.214Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript原型与原型链的理解">
-<meta name="twitter:description" content="引言原型与原型链一直是JavaScript中的重点与难点，虽然老生常谈了，但是还是需要对其进行深入与巩固。。。。 正文首先是原型，要理解原型，需要知道三个东西;prototype：每个函数都会有的属性，它指向函数的原型对象。（注意：函数对象才有，普通对象没有。）proto：每一个对象都会有个属性，当然，函数也属于对象，所以函数也有这个属性，它指向构造函数的原型对象;constructor：原型对象">
+<meta name="twitter:description" content="引言原型与原型链一直是JavaScript中的重点与难点，虽然老生常谈了，但是还是需要对其进行深入与巩固。。。。 正文首先是原型，要理解原型，需要知道三个东西;prototype：每个函数都会有的属性，它指向函数的原型对象。（注意：函数对象才有，普通对象没有。）__proto__：每一个对象都会有个属性，当然，函数也属于对象，所以函数也有这个属性，它指向构造函数的原型对象;constructor：">
 
 
 
@@ -301,7 +301,7 @@
 
       
         <h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>原型与原型链一直是JavaScript中的重点与难点，虽然老生常谈了，但是还是需要对其进行深入与巩固。。。。</p>
-<h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h3><p>首先是原型，要理解原型，需要知道三个东西;<br>prototype：每个<code>函数</code>都会有的属性，它指向函数的原型对象。（注意：函数对象才有，普通对象没有。）<br><strong>proto</strong>：每一个对象都会有个属性，当然，函数也属于对象，所以函数也有这个属性，它指向构造函数的原型对象;<br>constructor：原型对象上的一个属性，指向对象的构造函数;</p>
+<h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h3><p>首先是原型，要理解原型，需要知道三个东西;<br><code>prototype</code>：每个<code>函数</code>都会有的属性，它指向函数的原型对象。（注意：函数对象才有，普通对象没有。）<br><code>__proto__</code>：每一个对象都会有个属性，当然，函数也属于对象，所以函数也有这个属性，它指向构造函数的原型对象;<br><code>constructor</code>：原型对象上的一个属性，指向对象的构造函数;</p>
 <p>下面用示例来验证一下其关系;<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Pig</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> peppa = <span class="keyword">new</span> Pig(<span class="string">'peppa'</span>);</span><br></pre></td></tr></table></figure></p>
 <p>用<code>new</code>关键字实例化一个Pig对象，返回一个普通对象pie示例，在实例化的时候，Pig的prototype上的属性会作为原型对象赋值给实例。也就是说peppa的原型，是从Pig的prototype引用来的，即<code>peppa.__proto__ === Pig.prototype</code>;<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">peppa.__proto__ === Pig.prototype;</span><br><span class="line"><span class="comment">// true;</span></span><br></pre></td></tr></table></figure></p>
 <p>Pig是一个函数对象，它是Function的一个实例，所以<code>Pig.__proto__ === Function.prototype</code>一定为true;<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Pig.__proto__ === <span class="built_in">Function</span>.prototype;</span><br><span class="line"><span class="comment">// true</span></span><br></pre></td></tr></table></figure></p>
@@ -311,7 +311,7 @@
 <p>然后由于构造函数创建的时候会给其函数加上prototype属性，方面后面实例的引用，prototype属于普通对象，为Object的实例，有：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Pig.prototype.__proto__ === <span class="built_in">Object</span>.prototype;</span><br><span class="line"><span class="comment">// true</span></span><br></pre></td></tr></table></figure></p>
 <p>由上可以知道，所有构造函数的原型对象的<code>__proto__</code>都指向Object.prototype：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Function</span>.prototype.__proto__ === <span class="built_in">Object</span>.prototype</span><br><span class="line"><span class="comment">// true</span></span><br></pre></td></tr></table></figure></p>
 <p>另外，Object为一个对象，可以认为为某一个Function的实例返回，所以有：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span>.__proto__ === <span class="built_in">Function</span>.prototype</span><br><span class="line"><span class="comment">// true</span></span><br></pre></td></tr></table></figure></p>
-<p>至此，得到链条<code>pie.__proto__ === Pig.prototype</code> =&gt; <code>Pig.__proto__ === Function.prototype</code> =&gt; <code>Function.prototype.__proto__ === Object.prototype</code>;<br>那么<code>Object.prototype.__proto__</code>又指向谁，JS世界里万物皆对象，Object似乎已经到了原型链的顶端，果然不出我所料，它确实是null；<br>```js<br>Object.prototype.<strong>proto</strong> === null;<br>// true</p>
+<p>至此，得到链条<code>pie.__proto__ === Pig.prototype</code> =&gt; <code>Pig.__proto__ === Function.prototype</code> =&gt; <code>Function.prototype.__proto__ === Object.prototype</code>;<br>那么<code>Object.prototype.__proto__</code>又指向谁，JS世界里万物皆对象，Object似乎已经到了原型链的顶端，果然不出我所料，它确实是null；<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span>.prototype.__proto__ === <span class="literal">null</span>;</span><br><span class="line"><span class="comment">// true</span></span><br></pre></td></tr></table></figure></p>
 <p>接着说一下原型链。正如你在上面图中所看到的，JS在创建对象的时候，会在新对象上产生一个<strong>proto</strong>的属性，这个属性指向了它构造函数的原型的prototype。由此一级一级向上直到到达Object.prototype.proto === null的这个链条我们称之为原型链。</p>
 <h3 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h3><p>关于原型与原型链大概理解如上，大部分继承都是基于原型与原型链完成的。。。</p>
 
@@ -353,6 +353,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/22/前端发展历程/" rel="prev" title="浅谈前端技术的发展">
+                浅谈前端技术的发展 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -433,7 +437,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -446,7 +450,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
